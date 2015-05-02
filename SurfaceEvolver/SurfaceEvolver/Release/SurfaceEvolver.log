@@ -1,0 +1,19 @@
+﻿Build started 5/1/2015 4:59:01 PM.
+     1>Project "C:\Users\Caleb\Documents\classwork\2015 Spring\comp_phys\final\SurfaceEvolver\SurfaceEvolver\SurfaceEvolver.vcxproj" on node 2 (Clean target(s)).
+     1>CudaClean:
+         cmd.exe /C "C:\Users\Caleb\AppData\Local\Temp\tmp6524e832dd754a2396770535edcbf81f.cmd"
+         "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile  -dw     -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\ComputeNormals.cu.obj "C:\Users\Caleb\Documents\classwork\2015 Spring\comp_phys\final\SurfaceEvolver\SurfaceEvolver\ComputeNormals.cu" -clean
+         
+         C:\Users\Caleb\Documents\classwork\2015 Spring\comp_phys\final\SurfaceEvolver\SurfaceEvolver>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile  -dw     -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\ComputeNormals.cu.obj "C:\Users\Caleb\Documents\classwork\2015 Spring\comp_phys\final\SurfaceEvolver\SurfaceEvolver\ComputeNormals.cu" -clean 
+         ComputeNormals.cu
+       CudaClean:
+         cmd.exe /C "C:\Users\Caleb\AppData\Local\Temp\tmp389c43a363854b1d943137dbbb69b1b6.cmd"
+         "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile  -dw     -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\Math.cu.obj "C:\Users\Caleb\Documents\classwork\2015 Spring\comp_phys\final\SurfaceEvolver\SurfaceEvolver\Math.cu" -clean
+         
+         C:\Users\Caleb\Documents\classwork\2015 Spring\comp_phys\final\SurfaceEvolver\SurfaceEvolver>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include"     --keep-dir Release -maxrregcount=0  --machine 32 --compile  -dw     -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD  " -o Release\Math.cu.obj "C:\Users\Caleb\Documents\classwork\2015 Spring\comp_phys\final\SurfaceEvolver\SurfaceEvolver\Math.cu" -clean 
+         Math.cu
+     1>Done Building Project "C:\Users\Caleb\Documents\classwork\2015 Spring\comp_phys\final\SurfaceEvolver\SurfaceEvolver\SurfaceEvolver.vcxproj" (Clean target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.08

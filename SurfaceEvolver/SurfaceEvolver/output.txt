@@ -1,0 +1,3 @@
+Num vertices: 2048
+Num faces: 2398
+First memcpy is away!
