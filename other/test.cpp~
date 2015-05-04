@@ -60,7 +60,7 @@ void generateMeshData(MeshData* m, uint3* triangles, float3* points,
         offset += triCount;
     }
 }
-void destroyMeshData(MeshData* m){
+void deleteMeshData(MeshData* m){
     delete[] m->triangleCountPerVertex;
     delete[] m->triangleOffset;
     delete[] m->points1;

@@ -1,3 +1,6 @@
+//Compile with:
+// g++ -g update.cpp math2.cpp test.cpp
+
 #include "update.h"
 
 #include <iostream>
