@@ -1,7 +1,5 @@
 #include "math2.h"
 
-#ifndef UPDATE
-#define UPDATE
 typedef struct meshData{
     int vertexCount, triangleCount;
     int *triangleCountPerVertex, *triangleOffset;
@@ -33,5 +31,3 @@ float iterate(float lambda, MeshData* m);
 float findLambda(float lambda, MeshData* m);
 
 float update(float lambda, MeshData* m);
-
-#endif

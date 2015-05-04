@@ -1,19 +1,9 @@
-#ifndef MATHSTUFF
-#define MATHSTUFF
-
-#include <cmath>
+#include "math2.h"
 
 float sq(float x){
     return x*x;
 }
 
-typedef struct float3{
-    float x, y, z;
-} float3;
-
-typedef struct uint3{
-    unsigned x, y, z;
-} uint3;
 
 float length(float3 r){
     return sqrt(sq(r.x) + sq(r.y) + sq(r.z));
@@ -60,6 +50,3 @@ float3 operator/(float3 a, float b){
 void operator+=(float3& a, float3 b){
     a = a + b;
 }
-    
-    
-#endif
