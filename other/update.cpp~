@@ -41,7 +41,7 @@ void calculateForces(int vertexIndex,
     float3 s1 = x2 - x1;
     float3 s2 = x3 - x2;
     
-    areaForce[vertexIndex] += SIGMA/(4.0f*areas[tri.z]) * cross(s2, cross(s1, s2));
+    areaForce[vertexIndex] += SIGMA/(4.0f*areas[tri.z]) * (cross(s2, cross(s1, s2))));
             
     volumeForce[vertexIndex] += cross(x2, x3)/6.0f;
     
