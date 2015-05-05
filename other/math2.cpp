@@ -1,7 +1,24 @@
 #include "math2.h"
 
+using namespace std;
+
+ostream& operator<<(ostream& out, const uint3& tri){
+    out << "{ " << tri.x <<", " << tri.y << ", " << tri.z << " }";
+    return out;
+}
+
+ostream& operator<<(ostream& out, const float3& p){
+    out << "{ " << p.x <<", " << p.y << ", " << p.z << " }";
+    return out;
+}
+
 float sq(float x){
     return x*x;
+}
+
+float3 vector(float x, float y, float z){
+    float3 toReturn = {x, y, z};
+    return toReturn;
 }
 
 
@@ -49,4 +66,8 @@ float3 operator/(float3 a, float b){
 
 void operator+=(float3& a, float3 b){
     a = a + b;
+}
+
+void operator-=(float3& a, float3 b){
+    a = a - b;
 }

@@ -13,15 +13,17 @@
  * 
  */
 
-#define TINY_AMOUNT 0.001
-#define TEMP 0.001
+#define TINY_AMOUNT           0.000001
+#define TEMP                  0.0001
+#define LAMBDA_THRESHOLD      0.001
 #define MAX_LAMBDA_ITERATIONS 100
-#define UPDATE_ITERATIONS 100
-#define SIGMA 7
+#define UPDATE_ITERATIONS     2
+#define SIGMA                 7
+
 
 #include "update.h"
 
-
+using namespace std;
 
 void calculateForces(int vertexIndex, 
                      int threadIndex,
@@ -36,7 +38,7 @@ void calculateForces(int vertexIndex,
     float3 s1 = x2 - x1;
     float3 s2 = x3 - x2;
     
-    m->areaForce[vertexIndex] += SIGMA/(4.0f*m->areas[tri.z]) * cross(s2, cross(s1, s2));
+    m->areaForce[vertexIndex] += SIGMA/2.0f * cross(s2, cross(s1, s2)/length(cross(s1,s2)));
             
     m->volumeForce[vertexIndex] += cross(x2, x3)/6.0f;
     
@@ -67,8 +69,7 @@ void calculateAreas(int triangleIndex, uint3* triangles, float3* points2, float*
     uint3 t = triangles[triangleIndex];
     float3 s1 = points2[t.y] - points2[t.x];
     float3 s2 = points2[t.z] - points2[t.y];
-    
-    areas[triangleIndex] = length(cross(s1, s2))/2;
+    areas[triangleIndex] = length(cross(s1, s2)/2);
 }
 
 float sumSurfaceArea(int triangleCount, float* areas){
@@ -85,12 +86,14 @@ float sumSurfaceArea(int triangleCount, float* areas){
 // Returns surface area
 float iterate(float lambda, MeshData* m){
     for(int i=0; i < m->vertexCount; i++){
+        m->areaForce[i] = vector(0,0,0);
+        m->volumeForce[i] = vector(0,0,0);
         for(int j=0, k = m->triangleCountPerVertex[i]; j < k; j++){
             calculateForces(i,j, m);
         }
     }
-    
     float alpha = calculateAlpha(m->vertexCount, m->areaForce, m->volumeForce);
+    
     for(int i=0; i < m->vertexCount; i++){
         displaceVertices(i, alpha, lambda, m->points1, m->points2,
                          m->areaForce, m->volumeForce);
@@ -103,30 +106,34 @@ float iterate(float lambda, MeshData* m){
     return sumSurfaceArea(m->triangleCount, m->areas);
 } 
 
-float abs(float x){
-    return (x < 0) ? -x : x;
-}
 
 float findLambda(float lambda, MeshData* m){
     float delta = 0;
     int i=0;
+    float temp = TEMP;
     do{
         lambda += delta;
         float a1 = iterate(lambda, m);
         float a2 = iterate(lambda + TINY_AMOUNT, m);
         float slope = (a2-a1) / TINY_AMOUNT;
-        delta = -TEMP*slope;
+        
+        delta = -temp*slope;
+        temp*=.9;
         i++;
-    } while(abs(delta) > 0.01 && i < MAX_LAMBDA_ITERATIONS);
+    } while(abs(delta) > LAMBDA_THRESHOLD && i < MAX_LAMBDA_ITERATIONS);
+   
     return lambda;
 }
 
 float update(float lambda, MeshData* m){
-    lambda = findLambda(lambda, m);
+   lambda = findLambda(lambda, m);
     float3* tmpPoints = m->points2;
+    
+    // by doing this, m->points1 will be changed in each iteration
     m->points2 = m->points1;
     for(int i=0; i < UPDATE_ITERATIONS; i++){
-        iterate(lambda, m);
+//         iterate(lambda, m);
+        cout << iterate(lambda, m) << ",\n";
     }
     m->points2 = tmpPoints;
     return lambda;

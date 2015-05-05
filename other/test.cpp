@@ -3,7 +3,8 @@
 
 #include "update.h"
 
-#include <iostream>
+
+using namespace std;
 
 float3 points[20] = {{1.5, 1.5, 1.5}, {0.5, 0.5, 1.5}, {0.5, 1.5, 0.5},
                      {-0.5, -0.5, 1.5}, {-0.5, 0.5, 0.5}, {-0.5, 1.5, -0.5},
@@ -22,15 +23,19 @@ uint3 triangles[36] = {{2, 0,1}, {4, 1,3}, {4, 2,1}, {5, 2,4}, {7, 3,6},
                        {7, 8,19}, {14, 17,15}, {14, 19,17}, {13, 19,14}, 
                        {13, 7,19}, {6, 7,13}};
 
-uint3 makeWeirdTri(uint3 tri, int pointIndex, int triIndex){
+
+uint3 rearrangeTri(uint3 tri, int pointIndex, int triIndex){
+//     cout << pointIndex << ": " << tri << " -> ";
     if(tri.x == pointIndex){
         tri.x = tri.y;
         tri.y = tri.z;
     }else if(tri.y == pointIndex){
-        tri.x = tri.z;
         tri.y = tri.x;
+        tri.x = tri.z;
     }
-    tri.z = triIndex;
+    tri.index = triIndex;
+//     cout << tri << endl;
+    return tri;
 }
     
 void generateMeshData(MeshData* m, uint3* triangles, float3* points, 
@@ -46,6 +51,7 @@ void generateMeshData(MeshData* m, uint3* triangles, float3* points,
     m->triangleOffset = new int[pointCount];
     m->areaForce = new float3[pointCount];
     m->volumeForce = new float3[pointCount];
+    m->areas = new float[triangleCount];
     int offset = 0;
     int triCount = 0;
     for(int i=0; i < pointCount; i++){
@@ -55,7 +61,8 @@ void generateMeshData(MeshData* m, uint3* triangles, float3* points,
             if(triangles[j].x == i ||
                triangles[j].y == i ||
                triangles[j].z == i){
-                m->trianglesByVertex[offset + triCount] = makeWeirdTri(triangles[i], i, j);
+                m->trianglesByVertex[offset + triCount] = rearrangeTri(triangles[j], i, j);
+//                 cout << m->trianglesByVertex[offset + triCount] << endl;
                 triCount++;
             }
         }
@@ -66,11 +73,11 @@ void generateMeshData(MeshData* m, uint3* triangles, float3* points,
 void deleteMeshData(MeshData* m){
     delete[] m->triangleCountPerVertex;
     delete[] m->triangleOffset;
-    delete[] m->points1;
+    //delete[] m->points1;
     delete[] m->points2;
     delete[] m->areaForce;
     delete[] m->volumeForce;
-    delete[] m->triangles;
+    //delete[] m->triangles;
     delete[] m->areas;
 }
     
@@ -79,6 +86,27 @@ int main(){
     int triangleCount = 36;
     MeshData m;
     generateMeshData(&m, triangles, points, pointCount, triangleCount);
-    update(.1, &m);
+    
+    
+    for(int i=0; i < m.triangleCount; i++){
+        calculateAreas(i, m.triangles, m.points1, m.areas);
+    }
+    
+    cout << sumSurfaceArea(m.triangleCount, m.areas) << endl;
+    
+     update(0, &m);
+    cout << "points ={";
+    for(int i=0;i<pointCount;i++){
+        cout << points[i] << ", ";
+    }
+    cout << "};\nedges = {";
+    for(int i=0; i<triangleCount; i++){
+        cout << "UndirectedEdge[" << triangles[i].x + 1 << ", "
+                                  << triangles[i].y + 1 << "], "
+             << "UndirectedEdge[" << triangles[i].y + 1 << ", "
+                                  << triangles[i].z + 1 << "], " 
+            << "UndirectedEdge[" << triangles[i].x + 1 << ", "
+                                  << triangles[i].z + 1 << "],\n";
+    }
     deleteMeshData(&m);
 }
