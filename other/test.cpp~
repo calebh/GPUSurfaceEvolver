@@ -94,8 +94,7 @@ int main(){
     
     cout << sumSurfaceArea(m.triangleCount, m.areas) << endl;
     
-    update(0, &m);
-    /* // This bit outputs a thing that can be added to mathematica with relative ease
+     update(0, &m);
     cout << "points ={";
     for(int i=0;i<pointCount;i++){
         cout << points[i] << ", ";
@@ -109,6 +108,5 @@ int main(){
             << "UndirectedEdge[" << triangles[i].x + 1 << ", "
                                   << triangles[i].z + 1 << "],\n";
     }
-    */
     deleteMeshData(&m);
 }
