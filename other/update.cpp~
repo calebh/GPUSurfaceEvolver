@@ -14,7 +14,7 @@
  */
 
 #define TINY_AMOUNT           0.000001
-#define TEMP                  0.0001
+#define TEMP                  0.00001
 #define LAMBDA_THRESHOLD      0.001
 #define MAX_LAMBDA_ITERATIONS 100
 #define UPDATE_ITERATIONS     20
