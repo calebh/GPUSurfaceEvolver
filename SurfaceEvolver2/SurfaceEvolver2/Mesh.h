@@ -22,7 +22,7 @@ public:
 	Mesh(const std::string& filename);
 	~Mesh();
 	void draw(ShaderProgram* shader);
-	void update();
+	void updateDisplayBuffers();
 private:
 	void initCudaBuffers();
 	int numFaces;

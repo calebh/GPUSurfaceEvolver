@@ -15,7 +15,7 @@ void delete2D(int** ary, int size) {
 	delete[] ary;
 }
 
-
+// Create a tetrahedron
 Mesh::Mesh(const int size) {
 	int trianglesPerFace = size*size;
 	numFaces = trianglesPerFace * 4;
@@ -126,6 +126,7 @@ Mesh::Mesh(const int size) {
 	update();
 }
 
+// Load a mesh from a file
 Mesh::Mesh(const std::string& filename) {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(filename,
@@ -196,7 +197,7 @@ void Mesh::initCudaBuffers() {
 	cudaGraphicsGLRegisterBuffer(&(resources[2]), barycentricBufferObject, CU_GRAPHICS_REGISTER_FLAGS_WRITE_DISCARD);
 }
 
-void Mesh::update() {
+void Mesh::updateDisplayBuffers() {
 	// Lock the OpenGL buffers so that CUDA can use them
 	cudaGraphicsMapResources(3, resources, NULL);
 
