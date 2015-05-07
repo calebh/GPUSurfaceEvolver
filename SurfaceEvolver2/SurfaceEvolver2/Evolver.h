@@ -11,9 +11,12 @@ public:
 	~Evolver();
 	float findLambda();
 	void update();
+        
+        
 	void outputData();
+        
 private:
-	virtual float stepSimulation() = 0;
+	virtual void stepSimulation() = 0;
 	virtual float getArea() = 0;
 	virtual float getMeanNetForce() = 0;
 	virtual float getMeanCurvature() = 0;
