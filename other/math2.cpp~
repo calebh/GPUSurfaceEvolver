@@ -64,7 +64,7 @@ float3 operator/(float3 a, float b){
     return toReturn;
 }
 
-float3 operator/=(float3& a, float b){
+float3 operator/=(float3& a, int b){
     a = vector(a.x/b,
                        a.y/b,
                        a.z/b);

@@ -9,7 +9,7 @@
 using namespace std;
 
 
-#define UPDATES 1
+#define UPDATES 10
 
 
 

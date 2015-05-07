@@ -38,7 +38,7 @@ float3 operator*(float a, float3 b);
 
 float3 operator/(float3 a, float b);
 
-float3 operator/=(float3& a,float b);
+float3 operator/=(float3& a,int b);
 
 void operator+=(float3& a, float3 b);
 
