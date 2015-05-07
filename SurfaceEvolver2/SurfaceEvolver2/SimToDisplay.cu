@@ -22,7 +22,8 @@ __global__ void simToDisplayKernel (uint3* trianglesIn,
 	// One block per triangle
 	// Each triangle has three vertices, each with three components
 
-	int triangleIndex = blockIdx.x + blockIdx.y * blockDim.x + blockIdx.z * (blockDim.x * blockDim.y);
+	//int triangleIndex = blockIdx.x + blockIdx.y * blockDim.x + blockIdx.z * (blockDim.x * blockDim.y);
+	int triangleIndex = blockIdx.x + blockIdx.y * gridDim.x + blockIdx.z * (gridDim.x * gridDim.y);
 
 	if (triangleIndex < numTriangles) {
 		int i = triangleIndex;

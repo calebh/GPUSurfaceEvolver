@@ -45,9 +45,21 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Simulate.cuh">
+      <Filter>Kernels</Filter>
+    </ClInclude>
+    <ClInclude Include="Evolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GPUEvolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SimToDisplay.cu">
+      <Filter>Kernels</Filter>
+    </CudaCompile>
+    <CudaCompile Include="Simulate.cu">
       <Filter>Kernels</Filter>
     </CudaCompile>
   </ItemGroup>
@@ -70,5 +82,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Evolver.cpp" />
+    <ClCompile Include="GPUEvolver.cpp" />
   </ItemGroup>
 </Project>

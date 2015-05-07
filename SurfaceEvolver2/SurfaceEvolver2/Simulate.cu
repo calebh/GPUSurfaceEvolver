@@ -2,8 +2,6 @@
 
 #define TINY_AMOUNT           0.000001
 #define TEMP                  0.0001
-#define LAMBDA_THRESHOLD      0.001
-#define MAX_LAMBDA_ITERATIONS 100
 #define UPDATE_ITERATIONS     20
 #define SIGMA                 1
 
@@ -60,10 +58,17 @@ __host__ void initDeviceVariables(uint numTriangles,
 	cudaDeviceSynchronize();
 }
 
-__global__ void cleanDeviceVariables() {
+__global__ void cleanDeviceVariablesKernel() {
 	d_sum1 = 0.0f;
 	d_sum2 = 0.0f;
 	d_area = 0.0f;
+}
+
+__host__ void cleanDeviceVariables() {
+	dim3 grid = { 1, 1, 1 };
+	dim3 block = { 1, 1, 1 };
+	cleanDeviceVariablesKernel<<<grid, block>>>();
+	cudaDeviceSynchronize();
 }
 
 // Note that only the addition of each component is guarenteed to be atomic
@@ -117,6 +122,7 @@ __global__ void calculateAreaKernel(float3* vertices) {
 }
 
 __host__ float calculateArea(float3* vertices) {
+	cleanDeviceVariables();
 	dim3 grid = { h_numTriangles, 1, 1 };
 	dim3 block = { 1, 1, 1 };
 	calculateAreaKernel<<<grid, block>>>(vertices);
@@ -137,18 +143,11 @@ __global__ void calculateAlphaKernel() {
 }
 
 // Synchronize between kernel calls!!!
-__host__ float stepSimulation(float lambda,
+__host__ float stepCudaSimulation(float lambda,
 	                          float3* sourceVertices,
 							  float3* destinationVertices
 							  /*int maxTrianglesPerVertex*/) {
-	// 0. Reset some device variables for the next update
-	{
-		dim3 grid = { 1, 1, 1 };
-		dim3 block = { 1, 1, 1 };
-		cleanDeviceVariables<<<grid, block>>>();
-	}
-
-	cudaDeviceSynchronize();
+	cleanDeviceVariables();
 
 	// 1. Calculate forces
 	{

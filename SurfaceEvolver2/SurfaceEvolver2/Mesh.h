@@ -4,9 +4,7 @@
 #include "ShaderProgram.h"
 #include <iostream>
 #include <vector>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include <utility>
 
 #include "vector_types.h"
 #include "cuda.h"
@@ -18,21 +16,26 @@
 class Mesh
 {
 public:
+	Mesh();
 	Mesh(int size);
-	Mesh(const std::string& filename);
 	~Mesh();
+
 	void draw(ShaderProgram* shader);
-	void updateDisplayBuffers();
+	void updateDisplayBuffers(float3* cudaVertices, uint3* cudaTriangles);
+
+	std::vector<uint3>& getTriangles();
+	std::vector<float3>& getVertices();
+
 private:
+	cudaGraphicsResource *resources[3];
+	GLuint normalBuff;
+	GLuint unindexedVertexBuff;
+	GLuint barycentricBuff;
+
+protected:
+	std::vector<uint3> triangles;
+	std::vector<float3> vertices;
 	void initCudaBuffers();
 	int numFaces;
-	cudaGraphicsResource *resources[3];
-	std::vector<uint3> indices;
-	std::vector<float3> vertices;
-	uint3* cudaIndices;
-	float3* cudaVertices;
-	GLuint normalBufferObject;
-	GLuint unindexedPosBufferObject;
-	GLuint barycentricBufferObject;
 };
 

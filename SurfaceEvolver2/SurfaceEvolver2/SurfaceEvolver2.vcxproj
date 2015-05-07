@@ -153,9 +153,12 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CudaCompile Include="SimToDisplay.cu" />
+    <CudaCompile Include="Simulate.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraNode.h" />
+    <ClInclude Include="Evolver.h" />
+    <ClInclude Include="GPUEvolver.h" />
     <ClInclude Include="include\nvidia\helper_math.h" />
     <ClInclude Include="SimToDisplay.cuh" />
     <ClInclude Include="Device.h" />
@@ -165,11 +168,14 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Simulate.cuh" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="Device.cpp" />
+    <ClCompile Include="Evolver.cpp" />
+    <ClCompile Include="GPUEvolver.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModelNode.cpp" />
