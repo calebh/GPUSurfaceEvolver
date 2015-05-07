@@ -10,6 +10,9 @@ typedef struct meshData{
     float* areas;
 } MeshData;
 
+enum MeshType { TETRAHEDRON, ICOSAHEDRON, JEEP, FACE, MESH_FILE };
+enum OutputType { TOTAL_SURFACE_AREA, TOTAL_VOLUME, MEAN_NET_FORCE_MAG, MEAN_CURVATURE, POINTS, NONE };
+
 void calculateForces(int vertexIndex, 
                      int threadIndex,
                      MeshData* m);

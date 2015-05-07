@@ -9,7 +9,8 @@
 using namespace std;
 
 
-#define UPDATES 1
+#define UPDATES 10
+#define BIG_DATA
 
 
 
@@ -74,16 +75,18 @@ float3 randomVector(){
 }
 int main(){
     MeshData m;
+    
+// #ifdef BIG_DATA
+//     generateMeshData(&m, triangles, points, pointCount, triangleCount);
+// #else
+//     generateMeshData(&m, triangles3, points3, pointCount3, triangleCount3);
+// #endif
+    generateMeshData(&m, icosaTris, icosaPoints, 42, 80);
+    
 //     for(int i=0;i<pointCount;i++){
-//         points[i]+=2*randomVector();
+//         points[i].z*=3;
 //     }
-#ifdef BIG_DATA
-    generateMeshData(&m, triangles, points, pointCount, triangleCount);
-#else
-    generateMeshData(&m, triangles3, points3, pointCount3, triangleCount3);
-#endif
-    setprecision(3);
-    //     update(0, &m);
+    
     for(int i=0; i < UPDATES; i++)
         update(0, &m);
     /* // This bit outputs a thing that can be added to mathematica with relative ease
