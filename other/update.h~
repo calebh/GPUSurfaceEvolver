@@ -36,6 +36,6 @@ float iterate(float lambda, MeshData* m);
 
 float findLambda(float lambda, MeshData* m);
 
-float update(float lambda, MeshData* m, OutputType* output, int outputLength);
+float update(float lambda, MeshData* m, OutputType* output);
 
 #endif
