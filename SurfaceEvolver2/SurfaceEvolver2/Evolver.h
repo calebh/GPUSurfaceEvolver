@@ -1,6 +1,11 @@
+#pragma once
+
 #include "Mesh.h"
 
-#pragma once
+#include <iostream>
+
+#define TINY_AMOUNT 0.000001
+
 
 enum OutputType { TOTAL_SURFACE_AREA, TOTAL_VOLUME, MEAN_NET_FORCE,
                   MEAN_CURVATURE, POINTS, AREA_FORCES, VOLUME_FORCES,
@@ -16,8 +21,7 @@ public:
         
         void setOutputFormat(OutputType* format, int formatLength );
 	void outputData();
-        
-private:
+protected:
 	virtual void stepSimulation() = 0;
 	virtual float getArea() = 0;
 	virtual float getMeanNetForce() = 0;
@@ -31,6 +35,8 @@ private:
         
 	Mesh* mesh;
 	float lambda;
+        
+private:
 	int itersUntilLambdaUpdate;
 	int updateCount;
 };
