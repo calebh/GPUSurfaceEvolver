@@ -2,6 +2,10 @@
 
 using namespace std;
 
+#define TINY_AMOUNT 0.000001
+#define LAMBDA_THRESHOLD      0.001
+#define MAX_LAMBDA_ITERATIONS 100
+
 Evolver::Evolver(Mesh* initMesh, int initItersUntilLambdaUpdate) :
 	mesh(initMesh),
 	lambda(0.0f),
@@ -14,17 +18,15 @@ Evolver::~Evolver()
 {
 }
 
-void Evolver::findLambda(){
+void Evolver::findLambda() {
     float delta = 0;
     int i=0;
     float temp = 0.0001;
-    do{
+    do {
         lambda += delta;
-        stepSimulation();
-        float a1 = getArea();
+        float a1 = stepSimulation(false);
         lambda += TINY_AMOUNT;
-        stepSimulation();
-        float a2 = getArea();
+        float a2 = stepSimulation(false);
         float slope = (a2-a1) / TINY_AMOUNT;
         
         delta = -temp*slope;
@@ -34,24 +36,25 @@ void Evolver::findLambda(){
 
 }
 
-void Evolver::update(){
-    if(updateCount % itersUntilLambdaUpdate == 0)
-        findLambda();
-    stepSimulation();
+void Evolver::update() {
+	if (updateCount % itersUntilLambdaUpdate == 0) {
+		findLambda();
+	}
+    stepSimulation(true);
     updateCount++;
 }
 
-void Evolver::setOutputFormat(OutputType* format, int formatLength){
+void Evolver::setOutputFormat(OutputType* format, int formatLength) {
     this->format       = format;
-    this->formatLength = formatLength
+	this->formatLength = formatLength;
 }
 
 void Evolver::outputData(){
-    for(int i=0; i < formatLength; i++){
-        if(i>0) {
+    for (int i=0; i < formatLength; i++) {
+        if (i>0) {
             cout << ", ";
         }
-        switch(format[i]){
+        switch (format[i]) {
             case TOTAL_SURFACE_AREA:
                 cout << getArea();
                 break;
@@ -80,8 +83,9 @@ void Evolver::outputData(){
                 break;
         }
     }
-    if(formatLength > 0)
-        cout << endl;
+	if (formatLength > 0) {
+		cout << endl;
+	}
 }
     
     
