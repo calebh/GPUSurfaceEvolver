@@ -17,23 +17,25 @@
 #define TEMP                  0.0001
 #define LAMBDA_THRESHOLD      0.001
 #define MAX_LAMBDA_ITERATIONS 100
-#define UPDATE_ITERATIONS     
+#define UPDATE_ITERATIONS     10
 #define SIGMA                 1
 
-#define VOLUME_OUTPUT
-
-#define STARS
+#define POINT_OUTPUT
+#define VOLUMEF_OUTPUT
+#define AREAF_OUTPUT
+// #define NETF_OUTPUT
 
 #include "update.h"
 
 using namespace std;
 
+//calculates the force on an individual vertex due to an individual triangle
 void calculateForces(int vertexIndex, 
-                     int threadIndex,
+                     int triangleIndex,
                      MeshData* m)
 {
-    int triangleIndex = m->triangleOffset[vertexIndex];
-    uint3 tri = m->trianglesByVertex[triangleIndex + threadIndex];
+    int triangleIndexOffset = m->triangleOffset[vertexIndex];
+    uint3 tri = m->trianglesByVertex[triangleIndexOffset + triangleIndex];
     
     float3 x1 = m->points1[vertexIndex];
     float3 x2 = m->points1[tri.x];
@@ -42,11 +44,12 @@ void calculateForces(int vertexIndex,
     float3 s2 = x3 - x2;
     
     m->areaForce[vertexIndex] += SIGMA/2.0f * cross(s2, cross(s1, s2))/length(cross(s1,s2));
-//     cout << "~ Cross[points[[" << tri.x+1 << ", " << tri.y + 1<<"]]] = " << cross(x3, x2) <<endl;
     m->volumeForce[vertexIndex] += cross(x3, x2)/6.0f;
     
 }
 
+
+//calculates the alpha parameter from all of the area and volume forces in the mesh
 float calculateAlpha(int vertexCount,
                       float3* areaForce, float3* volumeForce)
 {
@@ -58,7 +61,7 @@ float calculateAlpha(int vertexCount,
     return sum1 / sum2;
 }
 
-
+//displaces vertices according to previously calculated values
 void displaceVertices(int vertexIndex, 
                       float alpha, float lambda, 
                       float3* points1, float3* points2, 
@@ -68,6 +71,7 @@ void displaceVertices(int vertexIndex,
     points2[vertexIndex] = points1[vertexIndex] + lambda*(areaForce[vertexIndex] - alpha*volumeForce[vertexIndex]);
 }
 
+// calculates the area of the triangle at triangles[triangleIndex]
 void calculateAreas(int triangleIndex, uint3* triangles, float3* points2, float* areas){
     uint3 t = triangles[triangleIndex];
     float3 s1 = points2[t.y] - points2[t.x];
@@ -75,6 +79,7 @@ void calculateAreas(int triangleIndex, uint3* triangles, float3* points2, float*
     areas[triangleIndex] = length(cross(s1, s2)/2);
 }
 
+// Sums the areas calculated in calculateAreas
 float sumSurfaceArea(int triangleCount, float* areas){
     float surfaceArea = 0;
     for(int i=0; i < triangleCount; i++){
@@ -83,11 +88,13 @@ float sumSurfaceArea(int triangleCount, float* areas){
     return surfaceArea;
 }
 
+// Calculates the total volume of a mesh defined by an array of points, an array of triangles
+// connecting those points, and the number of triangles in the mesh
 float calculateVolume(float3* points, uint3* triangles, int triangleCount){
     float v = 0;
     for(int i=0; i < triangleCount; i++){
         uint3 t = triangles[i];
-        v+= dot(points[t.x], cross(points[t.y],points[t.z]))/6.0f;
+        v += dot(points[t.x], cross(points[t.y],points[t.z]))/6.0f;
     }
     return v;
 }
@@ -96,8 +103,8 @@ float calculateVolume(float3* points, uint3* triangles, int triangleCount){
 
 
 
-// Returns surface area
-float iterate(float lambda, MeshData* m){
+// Does one iteration of surface evolution and returns the total surface area
+float evolveSurface(float lambda, MeshData* m){
     for(int i=0; i < m->vertexCount; i++){
         m->areaForce[i] = vector(0,0,0);
         m->volumeForce[i] = vector(0,0,0);
@@ -107,17 +114,10 @@ float iterate(float lambda, MeshData* m){
 
     }
     float alpha = calculateAlpha(m->vertexCount, m->areaForce, m->volumeForce);
-    cout << "{{";
     for(int i=0; i < m->vertexCount; i++){
-        if(i > 0){
-            cout <<",{";
-        };
-        cout << m->points1[i] << ", " << m->areaForce[i] << ", " << m->volumeForce[i];
-        cout << "}";
         displaceVertices(i, alpha, lambda, m->points1, m->points2,
                          m->areaForce, m->volumeForce);
     }
-    cout << "},\n";
     for(int i=0; i < m->triangleCount; i++){
         calculateAreas(i, m->triangles, m->points2, m->areas);
     }
@@ -126,15 +126,15 @@ float iterate(float lambda, MeshData* m){
     return sumSurfaceArea(m->triangleCount, m->areas);
 } 
 
-
+// Finds a nice lambda value through gradient descent
 float findLambda(float lambda, MeshData* m){
     float delta = 0;
     int i=0;
     float temp = TEMP;
     do{
         lambda += delta;
-        float a1 = iterate(lambda, m);
-        float a2 = iterate(lambda + TINY_AMOUNT, m);
+        float a1 = evolveSurface(lambda, m);
+        float a2 = evolveSurface(lambda + TINY_AMOUNT, m);
         float slope = (a2-a1) / TINY_AMOUNT;
         
         delta = -temp*slope;
@@ -145,34 +145,60 @@ float findLambda(float lambda, MeshData* m){
     return lambda;
 }
 
-float update(float lambda, MeshData* m){
+float calculateMeanCurvature(){
+    return 0;
+}
+
+float calculateMeanNetForce(float3* areaForce, float3* volumeForce, int vertexCount){
+    float mag = 0;
+    for(int i=0; i < vertexCount; i++){
+        mag += length(areaForce[i] + volumeForce[i]);
+    }
+    return mag/vertexCount;
+}
+// Finds a nice lambda and then calls evolveSurface UPDATE_ITERATIONS times, possible printing out more data
+// as well
+float update(float lambda, MeshData* m, OutputType* output, int outputLength){
     lambda = findLambda(lambda, m);
     float3* tmpPoints = m->points2;
-    #ifdef STARS
-    cout << "*******************************\n\n";
-    #endif
+    
     // by doing this, m->points1 will be changed in each iteration
     m->points2 = m->points1;
     for(int i=0; i < UPDATE_ITERATIONS; i++){
-        iterate(lambda, m);
+        float surfaceArea = evolveSurface(lambda, m);
         
-        
-        #ifdef FORCES_OUTPUT
-        for(int i=0; i < m->vertexCount;i++){
-            cout << m->areaForce[i] << " | " << m->volumeForce[i] << endl;
+        for(int i=0; i < outputLength; i++){
+            if(output[i] == NONE)
+                break;
+            if(i>0)
+                cout << ", ";
+            switch(output[i]){
+                case TOTAL_SURFACE_AREA:
+                    cout << surfaceArea;
+                    break;
+                case TOTAL_VOLUME:
+                    cout <<  calculateVolume(m->points1, m->triangles, m->triangleCount);
+                    break;
+                case MEAN_NET_FORCE:
+                    cout << calculateMeanNetForce(m->areaForce, m->volumeForce, m->vertexCount);
+                    break;
+                case MEAN_CURVATURE:
+                    cout << calculateMeanCurvature();
+                    break;
+                case POINTS:
+                    for(int i=0; i<m->vertexCount; i++){
+                        if(i>0)
+                            cout << ", ";
+                        cout << "[ " << m->points1[i].x 
+                             << ", " << m->points1[i].y 
+                             << ", " << m->points1[i].z << "]";
+                    }
+                default:
+                    break;
+            }
         }
-        #endif
-        #ifdef POINT_OUTPUT
-        for(int i=0;i<m->vertexCount;i++){
-            cout << m->points1[i].x << ", " << m->points1[i].y << ", " << m->points1[i].z << ", ";
-        }
-        cout << endl;
-        #endif
-        
-        #ifdef VOLUME_OUTPUT
-        cout << calculateVolume(m->points1, m->triangles, m->triangleCount) << endl;
-        #endif
-//         cout << iterate(lambda, m) << ",\n";
+        if(outputLength > 0)
+            cout << endl;
     }
     m->points2 = tmpPoints;
     return lambda;

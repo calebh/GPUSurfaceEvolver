@@ -1,0 +1,1789 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     96614,       1780]
+NotebookOptionsPosition[     95903,       1753]
+NotebookOutlinePosition[     96237,       1768]
+CellTagsIndexPosition[     96194,       1765]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"plotIteration", "[", 
+   RowBox[{"iteration_", ",", " ", 
+    RowBox[{"length_:", ".5"}]}], "]"}], ":=", 
+  RowBox[{"(", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"Show", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"ListPointPlot3D", "[", 
+       RowBox[{
+        RowBox[{"iteration", "\[LeftDoubleBracket]", 
+         RowBox[{"All", ",", "1"}], "\[RightDoubleBracket]"}], ",", 
+        RowBox[{"BoxRatios", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", "1", ",", "1"}], "}"}]}]}], "]"}], ",", 
+      RowBox[{"Graphics3D", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Arrowheads", "[", "Small", "]"}], ",", "Red", ",", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"Arrow", "[", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               RowBox[{
+               "iteration", "\[LeftDoubleBracket]", "j", 
+                "\[RightDoubleBracket]"}], "\[LeftDoubleBracket]", "1", 
+               "\[RightDoubleBracket]"}], ",", 
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                "iteration", "\[LeftDoubleBracket]", "j", 
+                 "\[RightDoubleBracket]"}], "\[LeftDoubleBracket]", "1", 
+                "\[RightDoubleBracket]"}], "+", 
+               RowBox[{"length", "*", 
+                RowBox[{
+                 RowBox[{
+                 "iteration", "\[LeftDoubleBracket]", "j", 
+                  "\[RightDoubleBracket]"}], "\[LeftDoubleBracket]", "2", 
+                 "\[RightDoubleBracket]"}]}]}]}], "}"}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"j", ",", " ", 
+             RowBox[{
+              RowBox[{"Dimensions", "[", "iteration", "]"}], 
+              "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
+            "}"}]}], "]"}], ",", 
+         RowBox[{"Blue", "\[IndentingNewLine]", 
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"Arrow", "[", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                "iteration", "\[LeftDoubleBracket]", "j", 
+                 "\[RightDoubleBracket]"}], "\[LeftDoubleBracket]", "1", 
+                "\[RightDoubleBracket]"}], ",", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{
+                 "iteration", "\[LeftDoubleBracket]", "j", 
+                  "\[RightDoubleBracket]"}], "\[LeftDoubleBracket]", "1", 
+                 "\[RightDoubleBracket]"}], "+", 
+                RowBox[{"length", "*", 
+                 RowBox[{
+                  RowBox[{
+                  "iteration", "\[LeftDoubleBracket]", "j", 
+                   "\[RightDoubleBracket]"}], "\[LeftDoubleBracket]", "3", 
+                  "\[RightDoubleBracket]"}]}]}]}], "}"}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"j", ",", " ", 
+              RowBox[{
+               RowBox[{"Dimensions", "[", "iteration", "]"}], 
+               "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
+             "}"}]}], "]"}]}]}], "\[IndentingNewLine]", "}"}], "]"}]}], "}"}],
+     "]"}], "\[IndentingNewLine]", ")"}]}]], "Input",
+ CellChangeTimes->{{3.6399621893992558`*^9, 3.639962212106287*^9}, {
+  3.639962329401226*^9, 3.6399624821708508`*^9}, {3.639962552527677*^9, 
+  3.639962576264554*^9}, {3.639962624964672*^9, 3.639962669922597*^9}, {
+  3.6399627250861607`*^9, 3.639962792290176*^9}, {3.639962840083637*^9, 
+  3.639962892653661*^9}, {3.639962935537389*^9, 3.639962971024091*^9}, {
+  3.639963001937842*^9, 3.6399630437100763`*^9}, {3.639963185030388*^9, 
+  3.639963197263382*^9}, {3.6400011068182497`*^9, 3.640001110860063*^9}, {
+  3.6400077707547503`*^9, 3.640007772490559*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"data", " ", "=", " ", 
+   RowBox[{
+   "Import", "[", 
+    "\"\</home/nolan/Documents/developement/compphysfinal/GPUSurfaceEvolver/\
+other/data.csv\>\"", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"data", "=", 
+   RowBox[{"Map", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Partition", "[", 
+       RowBox[{
+        RowBox[{"Partition", "[", 
+         RowBox[{"#", ",", "3"}], "]"}], ",", "3"}], "]"}], "&"}], ",", 
+     "data"}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.63994520137818*^9, 3.639945228050366*^9}, {
+   3.639946302918405*^9, 3.639946304575993*^9}, {3.639946631270092*^9, 
+   3.639946631540442*^9}, {3.639952553107547*^9, 3.639952556608671*^9}, {
+   3.6399538369817944`*^9, 3.6399538379822903`*^9}, 3.639953970818102*^9, {
+   3.6399540714599037`*^9, 3.639954083867049*^9}, 3.639954609099873*^9, {
+   3.639954642042247*^9, 3.639954643477385*^9}, {3.639961676314455*^9, 
+   3.6399617872259283`*^9}, {3.639961842695251*^9, 3.639961882035347*^9}, {
+   3.6399619457010527`*^9, 3.639961991464821*^9}, {3.639962113257386*^9, 
+   3.639962184168858*^9}, {3.639962377930313*^9, 3.639962379401013*^9}, {
+   3.639963233167922*^9, 3.639963233787966*^9}, {3.639963425511663*^9, 
+   3.639963427720683*^9}, {3.639963533597939*^9, 3.639963616532649*^9}, {
+   3.63996404016006*^9, 3.639964048476207*^9}, {3.64000114227525*^9, 
+   3.640001142436118*^9}, {3.640007765864602*^9, 3.64000776607131*^9}}],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.639963838719428*^9, 3.639963856004722*^9}, {
+  3.639963981246635*^9, 3.639964036147122*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ListPointPlot3D", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"data", "\[LeftDoubleBracket]", "100", "\[RightDoubleBracket]"}], 
+    "\[LeftDoubleBracket]", 
+    RowBox[{"All", ",", "1"}], "\[RightDoubleBracket]"}], ",", 
+   RowBox[{"BoxRatios", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1", ",", "3"}], "}"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.6399641450362186`*^9, 3.639964179412382*^9}, {
+  3.640000228855185*^9, 3.6400002342737494`*^9}, {3.6400006496860113`*^9, 
+  3.6400006631492434`*^9}}],
+
+Cell[BoxData[
+ Graphics3DBox[
+  {RGBColor[0.3315753, 0.4561011, 0.6388182], Point3DBox[CompressedData["
+1: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
+    "]]},
+  Axes->True,
+  AxesLabel->{None, None, None},
+  BoxRatios->{1, 1, 3},
+  FaceGridsStyle->Automatic,
+  ImageSize->{360., 407.46597080219806`},
+  PlotRange->{{-3.85889, 3.85888}, {-3.85886, 3.85887}, Automatic},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.02]}, {Automatic, Automatic}},
+  Ticks->{Automatic, Automatic, Automatic},
+  ViewPoint->{0.15222916569836029`, 2.10894791566589, 2.641810926262379},
+  ViewVertical->{-1.7050748634097772`, -0.9938216055368491, 
+   0.7531443956680912}]], "Output",
+ CellChangeTimes->{
+  3.6399641806072187`*^9, 3.640000268597579*^9, 3.640000509954276*^9, {
+   3.6400006383270283`*^9, 3.640000663610073*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{
+  "data", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}]], "Input",
+ CellChangeTimes->{
+  3.639964050696096*^9, {3.640000239559104*^9, 3.640000244200839*^9}, {
+   3.640000304512167*^9, 3.640000349538233*^9}, {3.6400004458177643`*^9, 
+   3.640000470609301*^9}, {3.64000067583587*^9, 3.6400007015143147`*^9}, {
+   3.6400013600124617`*^9, 3.640001363222927*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Part", "::", "partw"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Part \[NoBreak]\\!\\(3\\)\[NoBreak] of \
+\[NoBreak]\\!\\({\\(\\({4.75226`, 4.75226`, 4.75226`}\\)\\), \
+\\(\\({\\(\\(-1.32137`\\)\\), \\(\\(-1.32137`\\)\\), \
+\\(\\(-1.32137`\\)\\)}\\)\\)}\\)\[NoBreak] does not exist. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/General/partw\\\", \
+ButtonNote -> \\\"Part::partw\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.640001157524399*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Part", "::", "partw"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Part \[NoBreak]\\!\\(3\\)\[NoBreak] of \
+\[NoBreak]\\!\\({\\(\\({4, 4, 4.54333`}\\)\\), \
+\\(\\({\\(\\(-5.96046`*^-8\\)\\), \\(\\(-5.96046`*^-8\\)\\), \
+\\(\\(-3.3094`\\)\\)}\\)\\)}\\)\[NoBreak] does not exist. \\!\\(\\*ButtonBox[\
+\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/partw\\\", ButtonNote -> \
+\\\"Part::partw\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6400011577730513`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Part", "::", "partw"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Part \[NoBreak]\\!\\(3\\)\[NoBreak] of \
+\[NoBreak]\\!\\({\\(\\({4, 4.54333`, 4}\\)\\), \
+\\(\\({\\(\\(-5.96046`*^-8\\)\\), \\(\\(-3.3094`\\)\\), \
+0}\\)\\)}\\)\[NoBreak] does not exist. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/General/partw\\\", \
+ButtonNote -> \\\"Part::partw\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6400011580171843`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"General", "::", "stop"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Further output of \[NoBreak]\\!\\(\\*StyleBox[\\(Part :: \
+partw\\), \\\"MessageName\\\"]\\)\[NoBreak] will be suppressed during this \
+calculation. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/stop\\\", ButtonNote -> \
+\\\"General::stop\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.640001158190297*^9}],
+
+Cell[BoxData[
+ Graphics3DBox[{
+   {RGBColor[0.3315753, 0.4561011, 0.6388182], Point3DBox[CompressedData["
+1:eJyFl7FqVUEQhpdYuOU1aWxVSGPyBAE3WopCMCCiYqGmCiLYWNlY+QCaQhsb
+UQsbJe09W2uTIvgUEq6tjQbdmWW/3T9euAxn9uzsP7Mz/8w5d//xjZ2lEMLX
+4/+p4//ZO/HJ1tLKJmX4+5u5vDBf+XJvbVk+/5PRpa0fHn7en784vbn3avXd
+242ZS77X7g8ubf3Dx53dZ2d+p7WL169efhrdjunt2da5v7W7SCZtfWv72/df
+54+K/eD2W310+6Zvz63223MXae/nj+2HB+uXCo5g6/u7V24/OPg03br5+uXz
+o4XbM73ZtXNbffRzTW/7zR7Pe/No4/21u6vzgmsyaetl31TsJdhznHa+6Vuc
+AXp/L5kefibiaPGFbNLWyzm53MOEe8hmF3HKLX7Hm4E7tXqPu+uRHxPxtbij
+yxZ/zCV/gT+6X8g7+OV5kRFf8zsjP6D3PLZzMupqIu7Wn5lLWy/7c6n7jLp3
+f1HH8Nfrz/1Ffbi/yFP3F3nh/iLejs/w0h97LrxIafzCeEDv9w+95zX0XpcJ
+7werX7zP+nG7yEvHgXt13MJf6wuMi0vE0Z/H/F55lPxNXrf3xjxe+WbMx7Hj
+7zGvs0/U/oA8I88IPiZP135Cvodffr/I+47Xya9j3q19g/xNXrfzxvy7mFCf
+mfxNvhzzaL2vMR/Hjr/J64ZjzLOB/NLxNPlvzIvsA1H0DfJx7PibvG74xnwa
+yZsdH5PPxjxX+Z58SR5lPxnzcez4m7xuuMmblGO+IQ/5/JbHfEae6+acjDkn
+jfmVvOv9WvA3eX3W8aNJ+P3ffqD6ZYur4lV9VM0Trd81HqrvqvlDzVtlvp3z
+HlT/VnOMmtvUPNref80LNR+oOUnNhWreVfN6m6c1f0+eS9R8puZRNWer74T+
+e8byz/KxxdnPSWpeVPOxmvvVd4v6vlLfe1ZXVmeGn/Oc4tGT+0Pf31QfVnOB
+mkfUvIO5KfMZ/SPBr4x5yfIkA4fbQXwz6j4h/yf46fZxf24f+ZdR9xPtIr4Z
+dTbRL+S9n8t9tGfn0U/iU3ZRh51UeFX8DAfvb3wfKr4qLgq32h9lvhg+5iXz
+T+WZyht13+o+VFwUDtbTH3Cxz/8=
+     "]]}, 
+   {RGBColor[1, 0, 0], Arrowheads[
+    Small], {Arrow3DBox[{{4.75226, 4.75226, 4.75226}, {4.091575, 4.091575, 
+      4.091575}}], 
+     Arrow3DBox[{{4, 4, 4.54333}, {3.9999999701977, 3.9999999701977, 
+       2.88863}}], 
+     Arrow3DBox[{{4, 4.54333, 4}, {3.9999999701977, 2.88863, 4.}}], 
+     Arrow3DBox[{{3, 3, 4.54333}, {3.0000000298023, 3.000000089407, 
+       2.88863}}], 
+     Arrow3DBox[{{2.94177, 4.05823, 4.05823}, {3.44177, 3.55823, 3.55823}}], 
+     Arrow3DBox[{{3, 4.54333, 3}, {3.000000052154, 2.88863, 
+       3.0000000596045}}], 
+     Arrow3DBox[{{2, 2, 4.54333}, {2., 2.0000000298023, 2.88863}}], 
+     Arrow3DBox[{{1.94177, 3.05823, 4.05823}, {2.44177, 2.55823, 3.55823}}], 
+     Arrow3DBox[{{1.94177, 4.05823, 3.05823}, {2.44177, 3.55823, 2.55823}}], 
+     Arrow3DBox[{{2, 4.54333, 2}, {1.9999999552965, 2.88863, 
+       1.9999999701977}}], 
+     Arrow3DBox[{{1, 1, 4.54333}, {1.0000000298023, 1.0000000596045, 
+       2.88863}}], 
+     Arrow3DBox[{{0.94177, 2.05823, 4.05823}, {1.44177, 1.55823, 3.55823}}], 
+     Arrow3DBox[{{0.94177, 3.05823, 3.05823}, {1.44177, 2.55823, 2.55823}}], 
+     Arrow3DBox[{{0.94177, 4.05823, 2.05823}, {1.44177, 3.55823, 1.55823}}], 
+     Arrow3DBox[{{1, 4.54333, 1}, {1.0000000298023, 2.88863, 
+       1.0000000447035}}], 
+     Arrow3DBox[{{3.47081*^-9, 0, 4.54333}, {-2.633149*^-8, 0., 2.88863}}], 
+     Arrow3DBox[{{-0.0582305, 1.05823, 4.05823}, {0.4417695, 0.55823, 
+      3.55823}}], 
+     Arrow3DBox[{{-0.0582305, 2.05823, 3.05823}, {0.4417695, 1.55823, 
+      2.55823}}], 
+     Arrow3DBox[{{-0.0582305, 3.05823, 2.05823}, {0.4417695, 2.55823, 
+      1.55823}}], 
+     Arrow3DBox[{{-0.0582305, 4.05823, 1.05823}, {0.4417695, 3.55823, 
+      0.55823}}], 
+     Arrow3DBox[{{0, 4.54333, -2.60311*^-9}, {0., 2.88863, 1.974864*^-8}}], 
+     Arrow3DBox[{{-1, -1, 4.54333}, {-1.0000000298023, -1.0000000298023, 
+       2.88863}}], 
+     Arrow3DBox[{{-1.05823, 0.0582305, 4.05823}, {-0.55823, -0.4417695, 
+      3.55823}}], 
+     Arrow3DBox[{{-1.05823, 1.05823, 3.05823}, {-0.55823, 0.55823, 2.55823}}],
+      Arrow3DBox[{{-1.05823, 2.05823, 2.05823}, {-0.55823, 1.55823, 
+      1.55823}}], 
+     Arrow3DBox[{{-1.05823, 3.05823, 1.05823}, {-0.55823, 2.55823, 0.55823}}],
+      Arrow3DBox[{{-1.05823, 4.05823, 0.0582305}, {-0.55823, 
+      3.55823, -0.4417695}}], 
+     Arrow3DBox[{{-1, 4.54333, -1}, {-1.0000000596045, 
+       2.88863, -1.0000000298023}}], 
+     Arrow3DBox[{{-2, -2, 4.54333}, {-2.0000000298023, -1.9999999701977, 
+       2.88863}}], 
+     Arrow3DBox[{{-2.05823, -0.94177, 4.05823}, {-1.55823, -1.44177, 
+      3.55823}}], 
+     Arrow3DBox[{{-2.05823, 0.0582305, 3.05823}, {-1.55823, -0.4417695, 
+      2.55823}}], 
+     Arrow3DBox[{{-2.05823, 1.05823, 2.05823}, {-1.55823, 0.55823, 1.55823}}],
+      Arrow3DBox[{{-2.05823, 2.05823, 1.05823}, {-1.55823, 1.55823, 
+      0.55823}}], 
+     Arrow3DBox[{{-2.05823, 3.05823, 0.0582305}, {-1.55823, 
+      2.55823, -0.4417695}}], 
+     Arrow3DBox[{{-2.05823, 4.05823, -0.94177}, {-1.55823, 
+      3.55823, -1.44177}}], 
+     Arrow3DBox[{{-2, 4.54333, -2}, {-2., 2.88863, -1.9999999925494}}], 
+     Arrow3DBox[{{-3, -3, 4.54333}, {-3.0000000596045, -3.0000000596045, 
+       2.88863}}], 
+     Arrow3DBox[{{-3.05823, -1.94177, 4.05823}, {-2.55823, -2.44177, 
+      3.55823}}], 
+     Arrow3DBox[{{-3.05823, -0.94177, 3.05823}, {-2.55823, -1.44177, 
+      2.55823}}], 
+     Arrow3DBox[{{-3.05823, 0.0582305, 2.05823}, {-2.55823, -0.4417695, 
+      1.55823}}], 
+     Arrow3DBox[{{-3.05823, 1.05823, 1.05823}, {-2.55823, 0.55823, 0.55823}}],
+      Arrow3DBox[{{-3.05823, 2.05823, 0.0582305}, {-2.55823, 
+      1.55823, -0.4417695}}], 
+     Arrow3DBox[{{-3.05823, 3.05823, -0.94177}, {-2.55823, 
+      2.55823, -1.44177}}], 
+     Arrow3DBox[{{-3.05823, 4.05823, -1.94177}, {-2.55823, 
+      3.55823, -2.44177}}], 
+     Arrow3DBox[{{-3, 4.54333, -3}, {-2.9999999403955, 
+       2.88863, -3.000000104308}}], 
+     Arrow3DBox[{{-4, -4, 4.54333}, {-4., -3.9999999701977, 2.88863}}], 
+     Arrow3DBox[{{-4.05823, -2.94177, 4.05823}, {-3.55823, -3.44177, 
+      3.55823}}], 
+     Arrow3DBox[{{-4.05823, -1.94177, 3.05823}, {-3.55823, -2.44177, 
+      2.55823}}], 
+     Arrow3DBox[{{-4.05823, -0.94177, 2.05823}, {-3.55823, -1.44177, 
+      1.55823}}], 
+     Arrow3DBox[{{-4.05823, 0.0582305, 1.05823}, {-3.55823, -0.4417695, 
+      0.55823}}], 
+     Arrow3DBox[{{-4.05823, 1.05823, 0.0582305}, {-3.55823, 
+      0.55823, -0.4417695}}], 
+     Arrow3DBox[{{-4.05823, 2.05823, -0.94177}, {-3.55823, 
+      1.55823, -1.44177}}], 
+     Arrow3DBox[{{-4.05823, 3.05823, -1.94177}, {-3.55823, 
+      2.55823, -2.44177}}], 
+     Arrow3DBox[{{-4.05823, 4.05823, -2.94177}, {-3.55823, 
+      3.55823, -3.44177}}], 
+     Arrow3DBox[{{-4, 4.54333, -4}, {-3.9999999403955, 
+       2.88863, -3.9999999701977}}], 
+     Arrow3DBox[{{-4.75226, -4.75226, 4.75226}, {-4.091575, -4.091575, 
+      4.091575}}], 
+     Arrow3DBox[{{-4.54333, -4, 4}, {-2.88863, -3.9999999701977, 4.}}], 
+     Arrow3DBox[{{-4.54333, -3, 3}, {-2.88863, -3.000000052154, 
+       3.0000000596045}}], 
+     Arrow3DBox[{{-4.54333, -2, 2}, {-2.88863, -1.9999999552965, 
+       1.9999999701977}}], 
+     Arrow3DBox[{{-4.54333, -1, 1}, {-2.88863, -1.0000000298023, 
+       1.0000000447035}}], 
+     Arrow3DBox[{{-4.54333, 0, -2.60311*^-9}, {-2.88863, 0., 1.974864*^-8}}], 
+     Arrow3DBox[{{-4.54333, 1, -1}, {-2.88863, 
+       1.0000000596045, -1.0000000298023}}], 
+     Arrow3DBox[{{-4.54333, 2, -2}, {-2.88863, 2., -1.9999999925494}}], 
+     Arrow3DBox[{{-4.54333, 3, -3}, {-2.88863, 
+       2.9999999403955, -3.000000104308}}], 
+     Arrow3DBox[{{-4.54333, 4, -4}, {-2.88863, 
+       3.9999999403955, -3.9999999701977}}], 
+     Arrow3DBox[{{-4.75226, 4.75226, -4.75226}, {-4.091575, 
+      4.091575, -4.091575}}], 
+     Arrow3DBox[{{4.54333, 4, 4}, {2.88863, 3.9999999701977, 4.}}], 
+     Arrow3DBox[{{4.05823, 2.94177, 4.05823}, {3.55823, 3.44177, 3.55823}}], 
+     Arrow3DBox[{{4.54333, 3, 3}, {2.88863, 3.000000052154, 
+       3.0000000596045}}], 
+     Arrow3DBox[{{3.05823, 1.94177, 4.05823}, {2.55823, 2.44177, 3.55823}}], 
+     Arrow3DBox[{{4.05823, 1.94177, 3.05823}, {3.55823, 2.44177, 2.55823}}], 
+     Arrow3DBox[{{4.54333, 2, 2}, {2.88863, 1.9999999552965, 
+       1.9999999701977}}], 
+     Arrow3DBox[{{2.05823, 0.94177, 4.05823}, {1.55823, 1.44177, 3.55823}}], 
+     Arrow3DBox[{{3.05823, 0.94177, 3.05823}, {2.55823, 1.44177, 2.55823}}], 
+     Arrow3DBox[{{4.05823, 0.94177, 2.05823}, {3.55823, 1.44177, 1.55823}}], 
+     Arrow3DBox[{{4.54333, 1, 1}, {2.88863, 1.0000000298023, 
+       1.0000000447035}}], 
+     Arrow3DBox[{{1.05823, -0.0582305, 4.05823}, {0.55823, 0.4417695, 
+      3.55823}}], 
+     Arrow3DBox[{{2.05823, -0.0582305, 3.05823}, {1.55823, 0.4417695, 
+      2.55823}}], 
+     Arrow3DBox[{{3.05823, -0.0582305, 2.05823}, {2.55823, 0.4417695, 
+      1.55823}}], 
+     Arrow3DBox[{{4.05823, -0.0582305, 1.05823}, {3.55823, 0.4417695, 
+      0.55823}}], 
+     Arrow3DBox[{{4.54333, 0, -2.60311*^-9}, {2.88863, 0., 1.974864*^-8}}], 
+     Arrow3DBox[{{0.0582305, -1.05823, 4.05823}, {-0.4417695, -0.55823, 
+      3.55823}}], 
+     Arrow3DBox[{{1.05823, -1.05823, 3.05823}, {0.55823, -0.55823, 2.55823}}],
+      Arrow3DBox[{{2.05823, -1.05823, 2.05823}, {1.55823, -0.55823, 
+      1.55823}}], 
+     Arrow3DBox[{{3.05823, -1.05823, 1.05823}, {2.55823, -0.55823, 0.55823}}],
+      Arrow3DBox[{{4.05823, -1.05823, 0.0582305}, {
+      3.55823, -0.55823, -0.4417695}}], 
+     Arrow3DBox[{{4.54333, -1, -1}, {
+       2.88863, -1.0000000596045, -1.0000000298023}}], 
+     Arrow3DBox[{{-0.94177, -2.05823, 4.05823}, {-1.44177, -1.55823, 
+      3.55823}}], 
+     Arrow3DBox[{{0.0582305, -2.05823, 3.05823}, {-0.4417695, -1.55823, 
+      2.55823}}], 
+     Arrow3DBox[{{1.05823, -2.05823, 2.05823}, {0.55823, -1.55823, 1.55823}}],
+      Arrow3DBox[{{2.05823, -2.05823, 1.05823}, {1.55823, -1.55823, 
+      0.55823}}], 
+     Arrow3DBox[{{3.05823, -2.05823, 0.0582305}, {
+      2.55823, -1.55823, -0.4417695}}], 
+     Arrow3DBox[{{4.05823, -2.05823, -0.94177}, {
+      3.55823, -1.55823, -1.44177}}], 
+     Arrow3DBox[{{4.54333, -2, -2}, {2.88863, -2., -1.9999999925494}}], 
+     Arrow3DBox[{{-1.94177, -3.05823, 4.05823}, {-2.44177, -2.55823, 
+      3.55823}}], 
+     Arrow3DBox[{{-0.94177, -3.05823, 3.05823}, {-1.44177, -2.55823, 
+      2.55823}}], 
+     Arrow3DBox[{{0.0582305, -3.05823, 2.05823}, {-0.4417695, -2.55823, 
+      1.55823}}], 
+     Arrow3DBox[{{1.05823, -3.05823, 1.05823}, {0.55823, -2.55823, 0.55823}}],
+      Arrow3DBox[{{2.05823, -3.05823, 0.0582305}, {
+      1.55823, -2.55823, -0.4417695}}], 
+     Arrow3DBox[{{3.05823, -3.05823, -0.94177}, {
+      2.55823, -2.55823, -1.44177}}], 
+     Arrow3DBox[{{4.05823, -3.05823, -1.94177}, {
+      3.55823, -2.55823, -2.44177}}], 
+     Arrow3DBox[{{4.54333, -3, -3}, {
+       2.88863, -2.9999999403955, -3.000000104308}}], 
+     Arrow3DBox[{{-2.94177, -4.05823, 4.05823}, {-3.44177, -3.55823, 
+      3.55823}}], 
+     Arrow3DBox[{{-1.94177, -4.05823, 3.05823}, {-2.44177, -3.55823, 
+      2.55823}}], 
+     Arrow3DBox[{{-0.94177, -4.05823, 2.05823}, {-1.44177, -3.55823, 
+      1.55823}}], 
+     Arrow3DBox[{{0.0582305, -4.05823, 1.05823}, {-0.4417695, -3.55823, 
+      0.55823}}], 
+     Arrow3DBox[{{1.05823, -4.05823, 0.0582305}, {
+      0.55823, -3.55823, -0.4417695}}], 
+     Arrow3DBox[{{2.05823, -4.05823, -0.94177}, {
+      1.55823, -3.55823, -1.44177}}], 
+     Arrow3DBox[{{3.05823, -4.05823, -1.94177}, {
+      2.55823, -3.55823, -2.44177}}], 
+     Arrow3DBox[{{4.05823, -4.05823, -2.94177}, {
+      3.55823, -3.55823, -3.44177}}], 
+     Arrow3DBox[{{4.54333, -4, -4}, {
+       2.88863, -3.9999999403955, -3.9999999701977}}], 
+     Arrow3DBox[{{-4, -4.54333, 4}, {-3.9999999701977, -2.88863, 4.}}], 
+     Arrow3DBox[{{-3, -4.54333, 3}, {-3.000000052154, -2.88863, 
+       3.0000000596045}}], 
+     Arrow3DBox[{{-2, -4.54333, 2}, {-1.9999999552965, -2.88863, 
+       1.9999999701977}}], 
+     Arrow3DBox[{{-1, -4.54333, 1}, {-1.0000000298023, -2.88863, 
+       1.0000000447035}}], 
+     Arrow3DBox[{{0, -4.54333, -2.60311*^-9}, {0., -2.88863, 1.974864*^-8}}], 
+     Arrow3DBox[{{1, -4.54333, -1}, {
+       1.0000000596045, -2.88863, -1.0000000298023}}], 
+     Arrow3DBox[{{2, -4.54333, -2}, {2., -2.88863, -1.9999999925494}}], 
+     Arrow3DBox[{{3, -4.54333, -3}, {
+       2.9999999403955, -2.88863, -3.000000104308}}], 
+     Arrow3DBox[{{4, -4.54333, -4}, {
+       3.9999999403955, -2.88863, -3.9999999701977}}], 
+     Arrow3DBox[{{4.75226, -4.75226, -4.75226}, {
+      4.091575, -4.091575, -4.091575}}], 
+     Arrow3DBox[{{-4, 4, -4.54333}, {-3.9999999701977, 
+       3.9999999701977, -2.88863}}], 
+     Arrow3DBox[{{-3, 3, -4.54333}, {-3.0000000298023, 
+       3.000000089407, -2.88863}}], 
+     Arrow3DBox[{{-2.94177, 4.05823, -4.05823}, {-3.44177, 
+      3.55823, -3.55823}}], 
+     Arrow3DBox[{{-2, 2, -4.54333}, {-2., 2.0000000298023, -2.88863}}], 
+     Arrow3DBox[{{-1.94177, 3.05823, -4.05823}, {-2.44177, 
+      2.55823, -3.55823}}], 
+     Arrow3DBox[{{-1.94177, 4.05823, -3.05823}, {-2.44177, 
+      3.55823, -2.55823}}], 
+     Arrow3DBox[{{-1, 1, -4.54333}, {-1.0000000298023, 
+       1.0000000596045, -2.88863}}], 
+     Arrow3DBox[{{-0.94177, 2.05823, -4.05823}, {-1.44177, 
+      1.55823, -3.55823}}], 
+     Arrow3DBox[{{-0.94177, 3.05823, -3.05823}, {-1.44177, 
+      2.55823, -2.55823}}], 
+     Arrow3DBox[{{-0.94177, 4.05823, -2.05823}, {-1.44177, 
+      3.55823, -1.55823}}], 
+     Arrow3DBox[{{-3.47081*^-9, 0, -4.54333}, {2.633149*^-8, 0., -2.88863}}], 
+     Arrow3DBox[{{0.0582305, 1.05823, -4.05823}, {-0.4417695, 
+      0.55823, -3.55823}}], 
+     Arrow3DBox[{{0.0582305, 2.05823, -3.05823}, {-0.4417695, 
+      1.55823, -2.55823}}], 
+     Arrow3DBox[{{0.0582305, 3.05823, -2.05823}, {-0.4417695, 
+      2.55823, -1.55823}}], 
+     Arrow3DBox[{{0.0582305, 4.05823, -1.05823}, {-0.4417695, 
+      3.55823, -0.55823}}], 
+     Arrow3DBox[{{1, -1, -4.54333}, {
+       1.0000000298023, -1.0000000298023, -2.88863}}], 
+     Arrow3DBox[{{1.05823, 0.0582305, -4.05823}, {
+      0.55823, -0.4417695, -3.55823}}], 
+     Arrow3DBox[{{1.05823, 1.05823, -3.05823}, {0.55823, 0.55823, -2.55823}}],
+      Arrow3DBox[{{1.05823, 2.05823, -2.05823}, {0.55823, 
+      1.55823, -1.55823}}], 
+     Arrow3DBox[{{1.05823, 3.05823, -1.05823}, {0.55823, 2.55823, -0.55823}}],
+      Arrow3DBox[{{1.05823, 4.05823, -0.0582305}, {0.55823, 3.55823, 
+      0.4417695}}], 
+     Arrow3DBox[{{2, -2, -4.54333}, {
+       2.0000000298023, -1.9999999701977, -2.88863}}], 
+     Arrow3DBox[{{2.05823, -0.94177, -4.05823}, {
+      1.55823, -1.44177, -3.55823}}], 
+     Arrow3DBox[{{2.05823, 0.0582305, -3.05823}, {
+      1.55823, -0.4417695, -2.55823}}], 
+     Arrow3DBox[{{2.05823, 1.05823, -2.05823}, {1.55823, 0.55823, -1.55823}}],
+      Arrow3DBox[{{2.05823, 2.05823, -1.05823}, {1.55823, 
+      1.55823, -0.55823}}], 
+     Arrow3DBox[{{2.05823, 3.05823, -0.0582305}, {1.55823, 2.55823, 
+      0.4417695}}], 
+     Arrow3DBox[{{2.05823, 4.05823, 0.94177}, {1.55823, 3.55823, 1.44177}}], 
+     Arrow3DBox[{{3, -3, -4.54333}, {
+       3.0000000596045, -3.0000000596045, -2.88863}}], 
+     Arrow3DBox[{{3.05823, -1.94177, -4.05823}, {
+      2.55823, -2.44177, -3.55823}}], 
+     Arrow3DBox[{{3.05823, -0.94177, -3.05823}, {
+      2.55823, -1.44177, -2.55823}}], 
+     Arrow3DBox[{{3.05823, 0.0582305, -2.05823}, {
+      2.55823, -0.4417695, -1.55823}}], 
+     Arrow3DBox[{{3.05823, 1.05823, -1.05823}, {2.55823, 0.55823, -0.55823}}],
+      Arrow3DBox[{{3.05823, 2.05823, -0.0582305}, {2.55823, 1.55823, 
+      0.4417695}}], 
+     Arrow3DBox[{{3.05823, 3.05823, 0.94177}, {2.55823, 2.55823, 1.44177}}], 
+     Arrow3DBox[{{3.05823, 4.05823, 1.94177}, {2.55823, 3.55823, 2.44177}}], 
+     Arrow3DBox[{{4, -4, -4.54333}, {4., -3.9999999701977, -2.88863}}], 
+     Arrow3DBox[{{4.05823, -2.94177, -4.05823}, {
+      3.55823, -3.44177, -3.55823}}], 
+     Arrow3DBox[{{4.05823, -1.94177, -3.05823}, {
+      3.55823, -2.44177, -2.55823}}], 
+     Arrow3DBox[{{4.05823, -0.94177, -2.05823}, {
+      3.55823, -1.44177, -1.55823}}], 
+     Arrow3DBox[{{4.05823, 0.0582305, -1.05823}, {
+      3.55823, -0.4417695, -0.55823}}], 
+     Arrow3DBox[{{4.05823, 1.05823, -0.0582305}, {3.55823, 0.55823, 
+      0.4417695}}], 
+     Arrow3DBox[{{4.05823, 2.05823, 0.94177}, {3.55823, 1.55823, 1.44177}}], 
+     Arrow3DBox[{{4.05823, 3.05823, 1.94177}, {3.55823, 2.55823, 2.44177}}], 
+     Arrow3DBox[{{4.05823, 4.05823, 2.94177}, {3.55823, 3.55823, 3.44177}}], 
+     Arrow3DBox[{{-4.05823, 2.94177, -4.05823}, {-3.55823, 
+      3.44177, -3.55823}}], 
+     Arrow3DBox[{{-3.05823, 1.94177, -4.05823}, {-2.55823, 
+      2.44177, -3.55823}}], 
+     Arrow3DBox[{{-4.05823, 1.94177, -3.05823}, {-3.55823, 
+      2.44177, -2.55823}}], 
+     Arrow3DBox[{{-2.05823, 0.94177, -4.05823}, {-1.55823, 
+      1.44177, -3.55823}}], 
+     Arrow3DBox[{{-3.05823, 0.94177, -3.05823}, {-2.55823, 
+      1.44177, -2.55823}}], 
+     Arrow3DBox[{{-4.05823, 0.94177, -2.05823}, {-3.55823, 
+      1.44177, -1.55823}}], 
+     Arrow3DBox[{{-1.05823, -0.0582305, -4.05823}, {-0.55823, 
+      0.4417695, -3.55823}}], 
+     Arrow3DBox[{{-2.05823, -0.0582305, -3.05823}, {-1.55823, 
+      0.4417695, -2.55823}}], 
+     Arrow3DBox[{{-3.05823, -0.0582305, -2.05823}, {-2.55823, 
+      0.4417695, -1.55823}}], 
+     Arrow3DBox[{{-4.05823, -0.0582305, -1.05823}, {-3.55823, 
+      0.4417695, -0.55823}}], 
+     Arrow3DBox[{{-0.0582305, -1.05823, -4.05823}, {
+      0.4417695, -0.55823, -3.55823}}], 
+     Arrow3DBox[{{-1.05823, -1.05823, -3.05823}, {-0.55823, -0.55823, \
+-2.55823}}], 
+     Arrow3DBox[{{-2.05823, -1.05823, -2.05823}, {-1.55823, -0.55823, \
+-1.55823}}], 
+     Arrow3DBox[{{-3.05823, -1.05823, -1.05823}, {-2.55823, -0.55823, \
+-0.55823}}], 
+     Arrow3DBox[{{-4.05823, -1.05823, -0.0582305}, {-3.55823, -0.55823, 
+      0.4417695}}], 
+     Arrow3DBox[{{0.94177, -2.05823, -4.05823}, {
+      1.44177, -1.55823, -3.55823}}], 
+     Arrow3DBox[{{-0.0582305, -2.05823, -3.05823}, {
+      0.4417695, -1.55823, -2.55823}}], 
+     Arrow3DBox[{{-1.05823, -2.05823, -2.05823}, {-0.55823, -1.55823, \
+-1.55823}}], 
+     Arrow3DBox[{{-2.05823, -2.05823, -1.05823}, {-1.55823, -1.55823, \
+-0.55823}}], 
+     Arrow3DBox[{{-3.05823, -2.05823, -0.0582305}, {-2.55823, -1.55823, 
+      0.4417695}}], 
+     Arrow3DBox[{{-4.05823, -2.05823, 0.94177}, {-3.55823, -1.55823, 
+      1.44177}}], 
+     Arrow3DBox[{{1.94177, -3.05823, -4.05823}, {
+      2.44177, -2.55823, -3.55823}}], 
+     Arrow3DBox[{{0.94177, -3.05823, -3.05823}, {
+      1.44177, -2.55823, -2.55823}}], 
+     Arrow3DBox[{{-0.0582305, -3.05823, -2.05823}, {
+      0.4417695, -2.55823, -1.55823}}], 
+     Arrow3DBox[{{-1.05823, -3.05823, -1.05823}, {-0.55823, -2.55823, \
+-0.55823}}], 
+     Arrow3DBox[{{-2.05823, -3.05823, -0.0582305}, {-1.55823, -2.55823, 
+      0.4417695}}], 
+     Arrow3DBox[{{-3.05823, -3.05823, 0.94177}, {-2.55823, -2.55823, 
+      1.44177}}], 
+     Arrow3DBox[{{-4.05823, -3.05823, 1.94177}, {-3.55823, -2.55823, 
+      2.44177}}], 
+     Arrow3DBox[{{2.94177, -4.05823, -4.05823}, {
+      3.44177, -3.55823, -3.55823}}], 
+     Arrow3DBox[{{1.94177, -4.05823, -3.05823}, {
+      2.44177, -3.55823, -2.55823}}], 
+     Arrow3DBox[{{0.94177, -4.05823, -2.05823}, {
+      1.44177, -3.55823, -1.55823}}], 
+     Arrow3DBox[{{-0.0582305, -4.05823, -1.05823}, {
+      0.4417695, -3.55823, -0.55823}}], 
+     Arrow3DBox[{{-1.05823, -4.05823, -0.0582305}, {-0.55823, -3.55823, 
+      0.4417695}}], 
+     Arrow3DBox[{{-2.05823, -4.05823, 0.94177}, {-1.55823, -3.55823, 
+      1.44177}}], 
+     Arrow3DBox[{{-3.05823, -4.05823, 1.94177}, {-2.55823, -3.55823, 
+      2.44177}}], 
+     Arrow3DBox[{{-4.05823, -4.05823, 2.94177}, {-3.55823, -3.55823, 
+      3.44177}}]}, 
+    {RGBColor[0, 0, 1], 
+     Arrow3DBox[{{4.75226, 4.75226, 4.75226}, {
+       4.75226 + 0.5 
+         Part[{{4.75226, 4.75226, 4.75226}, {-1.32137, -1.32137, -1.32137}}, 
+           3], 4.75226 + 
+        0.5 Part[{{4.75226, 4.75226, 
+           4.75226}, {-1.32137, -1.32137, -1.32137}}, 3], 4.75226 + 
+        0.5 Part[{{4.75226, 4.75226, 
+           4.75226}, {-1.32137, -1.32137, -1.32137}}, 3]}}], 
+     Arrow3DBox[{{4, 4, 4.54333}, {
+       4 + 0.5 Part[{{4, 4, 4.54333}, {-5.96046*^-8, -5.96046*^-8, -3.3094}}, 
+           3], 4 + 0.5 
+         Part[{{4, 4, 4.54333}, {-5.96046*^-8, -5.96046*^-8, -3.3094}}, 3], 
+        4.54333 + 0.5 
+         Part[{{4, 4, 4.54333}, {-5.96046*^-8, -5.96046*^-8, -3.3094}}, 3]}}],
+      Arrow3DBox[{{4, 4.54333, 4}, {
+       4 + 0.5 Part[{{4, 4.54333, 4}, {-5.96046*^-8, -3.3094, 0}}, 3], 
+        4.54333 + 0.5 Part[{{4, 4.54333, 4}, {-5.96046*^-8, -3.3094, 0}}, 3], 
+        4 + 0.5 Part[{{4, 4.54333, 4}, {-5.96046*^-8, -3.3094, 0}}, 3]}}], 
+     Arrow3DBox[{{3, 3, 4.54333}, {
+       3 + 0.5 Part[{{3, 3, 4.54333}, {5.96046*^-8, 1.78814*^-7, -3.3094}}, 
+           3], 3 + 0.5 
+         Part[{{3, 3, 4.54333}, {5.96046*^-8, 1.78814*^-7, -3.3094}}, 3], 
+        4.54333 + 0.5 
+         Part[{{3, 3, 4.54333}, {5.96046*^-8, 1.78814*^-7, -3.3094}}, 3]}}], 
+     Arrow3DBox[{{2.94177, 4.05823, 4.05823}, {
+       2.94177 + 0.5 Part[{{2.94177, 4.05823, 4.05823}, {1, -1, -1}}, 3], 
+        4.05823 + 0.5 Part[{{2.94177, 4.05823, 4.05823}, {1, -1, -1}}, 3], 
+        4.05823 + 0.5 Part[{{2.94177, 4.05823, 4.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{3, 4.54333, 3}, {
+       3 + 0.5 Part[{{3, 4.54333, 3}, {1.04308*^-7, -3.3094, 1.19209*^-7}}, 
+           3], 4.54333 + 
+        0.5 Part[{{3, 4.54333, 3}, {1.04308*^-7, -3.3094, 1.19209*^-7}}, 3], 
+        3 + 0.5 Part[{{3, 4.54333, 3}, {1.04308*^-7, -3.3094, 1.19209*^-7}}, 
+           3]}}], Arrow3DBox[{{2, 2, 4.54333}, {
+       2 + 0.5 Part[{{2, 2, 4.54333}, {0, 5.96046*^-8, -3.3094}}, 3], 2 + 
+        0.5 Part[{{2, 2, 4.54333}, {0, 5.96046*^-8, -3.3094}}, 3], 4.54333 + 
+        0.5 Part[{{2, 2, 4.54333}, {0, 5.96046*^-8, -3.3094}}, 3]}}], 
+     Arrow3DBox[{{1.94177, 3.05823, 4.05823}, {
+       1.94177 + 0.5 Part[{{1.94177, 3.05823, 4.05823}, {1, -1, -1}}, 3], 
+        3.05823 + 0.5 Part[{{1.94177, 3.05823, 4.05823}, {1, -1, -1}}, 3], 
+        4.05823 + 0.5 Part[{{1.94177, 3.05823, 4.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{1.94177, 4.05823, 3.05823}, {
+       1.94177 + 0.5 Part[{{1.94177, 4.05823, 3.05823}, {1, -1, -1}}, 3], 
+        4.05823 + 0.5 Part[{{1.94177, 4.05823, 3.05823}, {1, -1, -1}}, 3], 
+        3.05823 + 0.5 Part[{{1.94177, 4.05823, 3.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{2, 4.54333, 2}, {
+       2 + 0.5 Part[{{2, 4.54333, 2}, {-8.9407*^-8, -3.3094, -5.96046*^-8}}, 
+           3], 4.54333 + 
+        0.5 Part[{{2, 4.54333, 2}, {-8.9407*^-8, -3.3094, -5.96046*^-8}}, 3], 
+        2 + 0.5 Part[{{2, 4.54333, 2}, {-8.9407*^-8, -3.3094, -5.96046*^-8}}, 
+           3]}}], Arrow3DBox[{{1, 1, 4.54333}, {
+       1 + 0.5 Part[{{1, 1, 4.54333}, {5.96046*^-8, 1.19209*^-7, -3.3094}}, 
+           3], 1 + 0.5 
+         Part[{{1, 1, 4.54333}, {5.96046*^-8, 1.19209*^-7, -3.3094}}, 3], 
+        4.54333 + 0.5 
+         Part[{{1, 1, 4.54333}, {5.96046*^-8, 1.19209*^-7, -3.3094}}, 3]}}], 
+     Arrow3DBox[{{0.94177, 2.05823, 4.05823}, {
+       0.94177 + 0.5 Part[{{0.94177, 2.05823, 4.05823}, {1, -1, -1}}, 3], 
+        2.05823 + 0.5 Part[{{0.94177, 2.05823, 4.05823}, {1, -1, -1}}, 3], 
+        4.05823 + 0.5 Part[{{0.94177, 2.05823, 4.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{0.94177, 3.05823, 3.05823}, {
+       0.94177 + 0.5 Part[{{0.94177, 3.05823, 3.05823}, {1, -1, -1}}, 3], 
+        3.05823 + 0.5 Part[{{0.94177, 3.05823, 3.05823}, {1, -1, -1}}, 3], 
+        3.05823 + 0.5 Part[{{0.94177, 3.05823, 3.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{0.94177, 4.05823, 2.05823}, {
+       0.94177 + 0.5 Part[{{0.94177, 4.05823, 2.05823}, {1, -1, -1}}, 3], 
+        4.05823 + 0.5 Part[{{0.94177, 4.05823, 2.05823}, {1, -1, -1}}, 3], 
+        2.05823 + 0.5 Part[{{0.94177, 4.05823, 2.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{1, 4.54333, 1}, {
+       1 + 0.5 Part[{{1, 4.54333, 1}, {5.96046*^-8, -3.3094, 8.9407*^-8}}, 3],
+         4.54333 + 
+        0.5 Part[{{1, 4.54333, 1}, {5.96046*^-8, -3.3094, 8.9407*^-8}}, 3], 1 + 
+        0.5 Part[{{1, 4.54333, 1}, {5.96046*^-8, -3.3094, 8.9407*^-8}}, 3]}}],
+      Arrow3DBox[{{3.47081*^-9, 0, 4.54333}, {
+       3.47081*^-9 + 
+        0.5 Part[{{3.47081*^-9, 0, 4.54333}, {-5.96046*^-8, 0, -3.3094}}, 3], 
+        0.5 Part[{{3.47081*^-9, 0, 4.54333}, {-5.96046*^-8, 0, -3.3094}}, 3], 
+        4.54333 + 0.5 
+         Part[{{3.47081*^-9, 0, 4.54333}, {-5.96046*^-8, 0, -3.3094}}, 3]}}], 
+     Arrow3DBox[{{-0.0582305, 1.05823, 
+       4.05823}, {-0.0582305 + 
+        0.5 Part[{{-0.0582305, 1.05823, 4.05823}, {1, -1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{-0.0582305, 1.05823, 4.05823}, {1, -1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-0.0582305, 1.05823, 4.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-0.0582305, 2.05823, 
+       3.05823}, {-0.0582305 + 
+        0.5 Part[{{-0.0582305, 2.05823, 3.05823}, {1, -1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{-0.0582305, 2.05823, 3.05823}, {1, -1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-0.0582305, 2.05823, 3.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-0.0582305, 3.05823, 
+       2.05823}, {-0.0582305 + 
+        0.5 Part[{{-0.0582305, 3.05823, 2.05823}, {1, -1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-0.0582305, 3.05823, 2.05823}, {1, -1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{-0.0582305, 3.05823, 2.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-0.0582305, 4.05823, 
+       1.05823}, {-0.0582305 + 
+        0.5 Part[{{-0.0582305, 4.05823, 1.05823}, {1, -1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-0.0582305, 4.05823, 1.05823}, {1, -1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{-0.0582305, 4.05823, 1.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{0, 4.54333, -2.60311*^-9}, {
+       0.5 Part[{{0, 4.54333, -2.60311*^-9}, {0, -3.3094, 4.47035*^-8}}, 3], 
+        4.54333 + 0.5 
+         Part[{{0, 4.54333, -2.60311*^-9}, {0, -3.3094, 4.47035*^-8}}, 
+           3], -2.60311*^-9 + 
+        0.5 Part[{{0, 4.54333, -2.60311*^-9}, {0, -3.3094, 4.47035*^-8}}, 
+           3]}}], Arrow3DBox[{{-1, -1, 4.54333}, {-1 + 
+        0.5 Part[{{-1, -1, 4.54333}, {-5.96046*^-8, -5.96046*^-8, -3.3094}}, 
+           3], -1 + 0.5 
+         Part[{{-1, -1, 4.54333}, {-5.96046*^-8, -5.96046*^-8, -3.3094}}, 3], 
+        4.54333 + 0.5 
+         Part[{{-1, -1, 4.54333}, {-5.96046*^-8, -5.96046*^-8, -3.3094}}, 
+           3]}}], Arrow3DBox[{{-1.05823, 0.0582305, 
+       4.05823}, {-1.05823 + 
+        0.5 Part[{{-1.05823, 0.0582305, 4.05823}, {1, -1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{-1.05823, 0.0582305, 4.05823}, {1, -1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-1.05823, 0.0582305, 4.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-1.05823, 1.05823, 
+       3.05823}, {-1.05823 + 
+        0.5 Part[{{-1.05823, 1.05823, 3.05823}, {1, -1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{-1.05823, 1.05823, 3.05823}, {1, -1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-1.05823, 1.05823, 3.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-1.05823, 2.05823, 
+       2.05823}, {-1.05823 + 
+        0.5 Part[{{-1.05823, 2.05823, 2.05823}, {1, -1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{-1.05823, 2.05823, 2.05823}, {1, -1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{-1.05823, 2.05823, 2.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-1.05823, 3.05823, 
+       1.05823}, {-1.05823 + 
+        0.5 Part[{{-1.05823, 3.05823, 1.05823}, {1, -1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-1.05823, 3.05823, 1.05823}, {1, -1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{-1.05823, 3.05823, 1.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-1.05823, 4.05823, 
+       0.0582305}, {-1.05823 + 
+        0.5 Part[{{-1.05823, 4.05823, 0.0582305}, {1, -1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-1.05823, 4.05823, 0.0582305}, {1, -1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{-1.05823, 4.05823, 0.0582305}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-1, 4.54333, -1}, {-1 + 
+        0.5 Part[{{-1, 4.54333, -1}, {-1.19209*^-7, -3.3094, -5.96046*^-8}}, 
+           3], 4.54333 + 
+        0.5 Part[{{-1, 4.54333, -1}, {-1.19209*^-7, -3.3094, -5.96046*^-8}}, 
+           3], -1 + 0.5 
+         Part[{{-1, 4.54333, -1}, {-1.19209*^-7, -3.3094, -5.96046*^-8}}, 
+           3]}}], Arrow3DBox[{{-2, -2, 4.54333}, {-2 + 
+        0.5 Part[{{-2, -2, 4.54333}, {-5.96046*^-8, 5.96046*^-8, -3.3094}}, 
+           3], -2 + 0.5 
+         Part[{{-2, -2, 4.54333}, {-5.96046*^-8, 5.96046*^-8, -3.3094}}, 3], 
+        4.54333 + 0.5 
+         Part[{{-2, -2, 4.54333}, {-5.96046*^-8, 5.96046*^-8, -3.3094}}, 
+           3]}}], Arrow3DBox[{{-2.05823, -0.94177, 
+       4.05823}, {-2.05823 + 
+        0.5 Part[{{-2.05823, -0.94177, 4.05823}, {1, -1, -1}}, 3], -0.94177 + 
+        0.5 Part[{{-2.05823, -0.94177, 4.05823}, {1, -1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-2.05823, -0.94177, 4.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-2.05823, 0.0582305, 
+       3.05823}, {-2.05823 + 
+        0.5 Part[{{-2.05823, 0.0582305, 3.05823}, {1, -1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{-2.05823, 0.0582305, 3.05823}, {1, -1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-2.05823, 0.0582305, 3.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-2.05823, 1.05823, 
+       2.05823}, {-2.05823 + 
+        0.5 Part[{{-2.05823, 1.05823, 2.05823}, {1, -1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{-2.05823, 1.05823, 2.05823}, {1, -1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{-2.05823, 1.05823, 2.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-2.05823, 2.05823, 
+       1.05823}, {-2.05823 + 
+        0.5 Part[{{-2.05823, 2.05823, 1.05823}, {1, -1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{-2.05823, 2.05823, 1.05823}, {1, -1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{-2.05823, 2.05823, 1.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-2.05823, 3.05823, 
+       0.0582305}, {-2.05823 + 
+        0.5 Part[{{-2.05823, 3.05823, 0.0582305}, {1, -1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-2.05823, 3.05823, 0.0582305}, {1, -1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{-2.05823, 3.05823, 0.0582305}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-2.05823, 
+       4.05823, -0.94177}, {-2.05823 + 
+        0.5 Part[{{-2.05823, 4.05823, -0.94177}, {1, -1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-2.05823, 4.05823, -0.94177}, {1, -1, -1}}, 3], -0.94177 + 
+        0.5 Part[{{-2.05823, 4.05823, -0.94177}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-2, 4.54333, -2}, {-2 + 
+        0.5 Part[{{-2, 4.54333, -2}, {0, -3.3094, 1.49012*^-8}}, 3], 4.54333 + 
+        0.5 Part[{{-2, 4.54333, -2}, {0, -3.3094, 1.49012*^-8}}, 3], -2 + 
+        0.5 Part[{{-2, 4.54333, -2}, {0, -3.3094, 1.49012*^-8}}, 3]}}], 
+     Arrow3DBox[{{-3, -3, 4.54333}, {-3 + 
+        0.5 Part[{{-3, -3, 4.54333}, {-1.19209*^-7, -1.19209*^-7, -3.3094}}, 
+           3], -3 + 0.5 
+         Part[{{-3, -3, 4.54333}, {-1.19209*^-7, -1.19209*^-7, -3.3094}}, 3], 
+        4.54333 + 0.5 
+         Part[{{-3, -3, 4.54333}, {-1.19209*^-7, -1.19209*^-7, -3.3094}}, 
+           3]}}], Arrow3DBox[{{-3.05823, -1.94177, 
+       4.05823}, {-3.05823 + 
+        0.5 Part[{{-3.05823, -1.94177, 4.05823}, {1, -1, -1}}, 3], -1.94177 + 
+        0.5 Part[{{-3.05823, -1.94177, 4.05823}, {1, -1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-3.05823, -1.94177, 4.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, -0.94177, 
+       3.05823}, {-3.05823 + 
+        0.5 Part[{{-3.05823, -0.94177, 3.05823}, {1, -1, -1}}, 3], -0.94177 + 
+        0.5 Part[{{-3.05823, -0.94177, 3.05823}, {1, -1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-3.05823, -0.94177, 3.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, 0.0582305, 
+       2.05823}, {-3.05823 + 
+        0.5 Part[{{-3.05823, 0.0582305, 2.05823}, {1, -1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{-3.05823, 0.0582305, 2.05823}, {1, -1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{-3.05823, 0.0582305, 2.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, 1.05823, 
+       1.05823}, {-3.05823 + 
+        0.5 Part[{{-3.05823, 1.05823, 1.05823}, {1, -1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{-3.05823, 1.05823, 1.05823}, {1, -1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{-3.05823, 1.05823, 1.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, 2.05823, 
+       0.0582305}, {-3.05823 + 
+        0.5 Part[{{-3.05823, 2.05823, 0.0582305}, {1, -1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{-3.05823, 2.05823, 0.0582305}, {1, -1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{-3.05823, 2.05823, 0.0582305}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, 
+       3.05823, -0.94177}, {-3.05823 + 
+        0.5 Part[{{-3.05823, 3.05823, -0.94177}, {1, -1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-3.05823, 3.05823, -0.94177}, {1, -1, -1}}, 3], -0.94177 + 
+        0.5 Part[{{-3.05823, 3.05823, -0.94177}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, 
+       4.05823, -1.94177}, {-3.05823 + 
+        0.5 Part[{{-3.05823, 4.05823, -1.94177}, {1, -1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-3.05823, 4.05823, -1.94177}, {1, -1, -1}}, 3], -1.94177 + 
+        0.5 Part[{{-3.05823, 4.05823, -1.94177}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-3, 4.54333, -3}, {-3 + 
+        0.5 Part[{{-3, 4.54333, -3}, {1.19209*^-7, -3.3094, -2.08616*^-7}}, 
+           3], 4.54333 + 
+        0.5 Part[{{-3, 4.54333, -3}, {1.19209*^-7, -3.3094, -2.08616*^-7}}, 
+           3], -3 + 
+        0.5 Part[{{-3, 4.54333, -3}, {1.19209*^-7, -3.3094, -2.08616*^-7}}, 
+           3]}}], Arrow3DBox[{{-4, -4, 4.54333}, {-4 + 
+        0.5 Part[{{-4, -4, 4.54333}, {0, 5.96046*^-8, -3.3094}}, 3], -4 + 
+        0.5 Part[{{-4, -4, 4.54333}, {0, 5.96046*^-8, -3.3094}}, 3], 4.54333 + 
+        0.5 Part[{{-4, -4, 4.54333}, {0, 5.96046*^-8, -3.3094}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, -2.94177, 
+       4.05823}, {-4.05823 + 
+        0.5 Part[{{-4.05823, -2.94177, 4.05823}, {1, -1, -1}}, 3], -2.94177 + 
+        0.5 Part[{{-4.05823, -2.94177, 4.05823}, {1, -1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-4.05823, -2.94177, 4.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, -1.94177, 
+       3.05823}, {-4.05823 + 
+        0.5 Part[{{-4.05823, -1.94177, 3.05823}, {1, -1, -1}}, 3], -1.94177 + 
+        0.5 Part[{{-4.05823, -1.94177, 3.05823}, {1, -1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-4.05823, -1.94177, 3.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, -0.94177, 
+       2.05823}, {-4.05823 + 
+        0.5 Part[{{-4.05823, -0.94177, 2.05823}, {1, -1, -1}}, 3], -0.94177 + 
+        0.5 Part[{{-4.05823, -0.94177, 2.05823}, {1, -1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{-4.05823, -0.94177, 2.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, 0.0582305, 
+       1.05823}, {-4.05823 + 
+        0.5 Part[{{-4.05823, 0.0582305, 1.05823}, {1, -1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{-4.05823, 0.0582305, 1.05823}, {1, -1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{-4.05823, 0.0582305, 1.05823}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, 1.05823, 
+       0.0582305}, {-4.05823 + 
+        0.5 Part[{{-4.05823, 1.05823, 0.0582305}, {1, -1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{-4.05823, 1.05823, 0.0582305}, {1, -1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{-4.05823, 1.05823, 0.0582305}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, 
+       2.05823, -0.94177}, {-4.05823 + 
+        0.5 Part[{{-4.05823, 2.05823, -0.94177}, {1, -1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{-4.05823, 2.05823, -0.94177}, {1, -1, -1}}, 3], -0.94177 + 
+        0.5 Part[{{-4.05823, 2.05823, -0.94177}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, 
+       3.05823, -1.94177}, {-4.05823 + 
+        0.5 Part[{{-4.05823, 3.05823, -1.94177}, {1, -1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-4.05823, 3.05823, -1.94177}, {1, -1, -1}}, 3], -1.94177 + 
+        0.5 Part[{{-4.05823, 3.05823, -1.94177}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, 
+       4.05823, -2.94177}, {-4.05823 + 
+        0.5 Part[{{-4.05823, 4.05823, -2.94177}, {1, -1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-4.05823, 4.05823, -2.94177}, {1, -1, -1}}, 3], -2.94177 + 
+        0.5 Part[{{-4.05823, 4.05823, -2.94177}, {1, -1, -1}}, 3]}}], 
+     Arrow3DBox[{{-4, 4.54333, -4}, {-4 + 
+        0.5 Part[{{-4, 4.54333, -4}, {1.19209*^-7, -3.3094, 5.96046*^-8}}, 3],
+         4.54333 + 
+        0.5 Part[{{-4, 4.54333, -4}, {1.19209*^-7, -3.3094, 5.96046*^-8}}, 
+           3], -4 + 0.5 
+         Part[{{-4, 4.54333, -4}, {1.19209*^-7, -3.3094, 5.96046*^-8}}, 3]}}],
+      Arrow3DBox[{{-4.75226, -4.75226, 
+       4.75226}, {-4.75226 + 
+        0.5 Part[{{-4.75226, -4.75226, 4.75226}, {1.32137, 
+           1.32137, -1.32137}}, 3], -4.75226 + 
+        0.5 Part[{{-4.75226, -4.75226, 4.75226}, {1.32137, 
+           1.32137, -1.32137}}, 3], 4.75226 + 
+        0.5 Part[{{-4.75226, -4.75226, 4.75226}, {1.32137, 
+           1.32137, -1.32137}}, 3]}}], 
+     Arrow3DBox[{{-4.54333, -4, 4}, {-4.54333 + 
+        0.5 Part[{{-4.54333, -4, 4}, {3.3094, 5.96046*^-8, 0}}, 3], -4 + 
+        0.5 Part[{{-4.54333, -4, 4}, {3.3094, 5.96046*^-8, 0}}, 3], 4 + 
+        0.5 Part[{{-4.54333, -4, 4}, {3.3094, 5.96046*^-8, 0}}, 3]}}], 
+     Arrow3DBox[{{-4.54333, -3, 3}, {-4.54333 + 
+        0.5 Part[{{-4.54333, -3, 3}, {3.3094, -1.04308*^-7, 1.19209*^-7}}, 
+           3], -3 + 0.5 
+         Part[{{-4.54333, -3, 3}, {3.3094, -1.04308*^-7, 1.19209*^-7}}, 3], 3 + 
+        0.5 Part[{{-4.54333, -3, 3}, {3.3094, -1.04308*^-7, 1.19209*^-7}}, 
+           3]}}], Arrow3DBox[{{-4.54333, -2, 2}, {-4.54333 + 
+        0.5 Part[{{-4.54333, -2, 2}, {3.3094, 8.9407*^-8, -5.96046*^-8}}, 
+           3], -2 + 0.5 
+         Part[{{-4.54333, -2, 2}, {3.3094, 8.9407*^-8, -5.96046*^-8}}, 3], 2 + 
+        0.5 Part[{{-4.54333, -2, 2}, {3.3094, 8.9407*^-8, -5.96046*^-8}}, 
+           3]}}], Arrow3DBox[{{-4.54333, -1, 1}, {-4.54333 + 
+        0.5 
+         Part[{{-4.54333, -1, 1}, {3.3094, -5.96046*^-8, 8.9407*^-8}}, 3], -1 + 
+        0.5 Part[{{-4.54333, -1, 1}, {3.3094, -5.96046*^-8, 8.9407*^-8}}, 3], 
+        1 + 0.5 Part[{{-4.54333, -1, 1}, {3.3094, -5.96046*^-8, 8.9407*^-8}}, 
+           3]}}], Arrow3DBox[{{-4.54333, 0, -2.60311*^-9}, {-4.54333 + 
+        0.5 Part[{{-4.54333, 0, -2.60311*^-9}, {3.3094, 0, 4.47035*^-8}}, 3], 
+        0.5 Part[{{-4.54333, 0, -2.60311*^-9}, {3.3094, 0, 4.47035*^-8}}, 
+          3], -2.60311*^-9 + 
+        0.5 Part[{{-4.54333, 0, -2.60311*^-9}, {3.3094, 0, 4.47035*^-8}}, 
+           3]}}], Arrow3DBox[{{-4.54333, 1, -1}, {-4.54333 + 
+        0.5 Part[{{-4.54333, 1, -1}, {3.3094, 1.19209*^-7, -5.96046*^-8}}, 3],
+         1 + 0.5 
+         Part[{{-4.54333, 1, -1}, {3.3094, 1.19209*^-7, -5.96046*^-8}}, 
+           3], -1 + 0.5 
+         Part[{{-4.54333, 1, -1}, {3.3094, 1.19209*^-7, -5.96046*^-8}}, 3]}}],
+      Arrow3DBox[{{-4.54333, 2, -2}, {-4.54333 + 
+        0.5 Part[{{-4.54333, 2, -2}, {3.3094, 0, 1.49012*^-8}}, 3], 2 + 
+        0.5 Part[{{-4.54333, 2, -2}, {3.3094, 0, 1.49012*^-8}}, 3], -2 + 
+        0.5 Part[{{-4.54333, 2, -2}, {3.3094, 0, 1.49012*^-8}}, 3]}}], 
+     Arrow3DBox[{{-4.54333, 3, -3}, {-4.54333 + 
+        0.5 Part[{{-4.54333, 3, -3}, {3.3094, -1.19209*^-7, -2.08616*^-7}}, 
+           3], 3 + 0.5 
+         Part[{{-4.54333, 3, -3}, {3.3094, -1.19209*^-7, -2.08616*^-7}}, 
+           3], -3 + 0.5 
+         Part[{{-4.54333, 3, -3}, {3.3094, -1.19209*^-7, -2.08616*^-7}}, 
+           3]}}], Arrow3DBox[{{-4.54333, 4, -4}, {-4.54333 + 
+        0.5 Part[{{-4.54333, 4, -4}, {3.3094, -1.19209*^-7, 5.96046*^-8}}, 3],
+         4 + 0.5 
+         Part[{{-4.54333, 4, -4}, {3.3094, -1.19209*^-7, 5.96046*^-8}}, 
+           3], -4 + 0.5 
+         Part[{{-4.54333, 4, -4}, {3.3094, -1.19209*^-7, 5.96046*^-8}}, 3]}}],
+      Arrow3DBox[{{-4.75226, 
+       4.75226, -4.75226}, {-4.75226 + 
+        0.5 Part[{{-4.75226, 4.75226, -4.75226}, {1.32137, -1.32137, 
+           1.32137}}, 3], 4.75226 + 
+        0.5 Part[{{-4.75226, 4.75226, -4.75226}, {1.32137, -1.32137, 
+           1.32137}}, 3], -4.75226 + 
+        0.5 Part[{{-4.75226, 4.75226, -4.75226}, {1.32137, -1.32137, 
+           1.32137}}, 3]}}], 
+     Arrow3DBox[{{4.54333, 4, 4}, {
+       4.54333 + 0.5 Part[{{4.54333, 4, 4}, {-3.3094, -5.96046*^-8, 0}}, 3], 
+        4 + 0.5 Part[{{4.54333, 4, 4}, {-3.3094, -5.96046*^-8, 0}}, 3], 4 + 
+        0.5 Part[{{4.54333, 4, 4}, {-3.3094, -5.96046*^-8, 0}}, 3]}}], 
+     Arrow3DBox[{{4.05823, 2.94177, 4.05823}, {
+       4.05823 + 0.5 Part[{{4.05823, 2.94177, 4.05823}, {-1, 1, -1}}, 3], 
+        2.94177 + 0.5 Part[{{4.05823, 2.94177, 4.05823}, {-1, 1, -1}}, 3], 
+        4.05823 + 0.5 Part[{{4.05823, 2.94177, 4.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.54333, 3, 3}, {
+       4.54333 + 0.5 
+         Part[{{4.54333, 3, 3}, {-3.3094, 1.04308*^-7, 1.19209*^-7}}, 3], 3 + 
+        0.5 Part[{{4.54333, 3, 3}, {-3.3094, 1.04308*^-7, 1.19209*^-7}}, 3], 
+        3 + 0.5 Part[{{4.54333, 3, 3}, {-3.3094, 1.04308*^-7, 1.19209*^-7}}, 
+           3]}}], Arrow3DBox[{{3.05823, 1.94177, 4.05823}, {
+       3.05823 + 0.5 Part[{{3.05823, 1.94177, 4.05823}, {-1, 1, -1}}, 3], 
+        1.94177 + 0.5 Part[{{3.05823, 1.94177, 4.05823}, {-1, 1, -1}}, 3], 
+        4.05823 + 0.5 Part[{{3.05823, 1.94177, 4.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, 1.94177, 3.05823}, {
+       4.05823 + 0.5 Part[{{4.05823, 1.94177, 3.05823}, {-1, 1, -1}}, 3], 
+        1.94177 + 0.5 Part[{{4.05823, 1.94177, 3.05823}, {-1, 1, -1}}, 3], 
+        3.05823 + 0.5 Part[{{4.05823, 1.94177, 3.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.54333, 2, 2}, {
+       4.54333 + 0.5 
+         Part[{{4.54333, 2, 2}, {-3.3094, -8.9407*^-8, -5.96046*^-8}}, 3], 2 + 
+        0.5 Part[{{4.54333, 2, 2}, {-3.3094, -8.9407*^-8, -5.96046*^-8}}, 3], 
+        2 + 0.5 Part[{{4.54333, 2, 2}, {-3.3094, -8.9407*^-8, -5.96046*^-8}}, 
+           3]}}], Arrow3DBox[{{2.05823, 0.94177, 4.05823}, {
+       2.05823 + 0.5 Part[{{2.05823, 0.94177, 4.05823}, {-1, 1, -1}}, 3], 
+        0.94177 + 0.5 Part[{{2.05823, 0.94177, 4.05823}, {-1, 1, -1}}, 3], 
+        4.05823 + 0.5 Part[{{2.05823, 0.94177, 4.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, 0.94177, 3.05823}, {
+       3.05823 + 0.5 Part[{{3.05823, 0.94177, 3.05823}, {-1, 1, -1}}, 3], 
+        0.94177 + 0.5 Part[{{3.05823, 0.94177, 3.05823}, {-1, 1, -1}}, 3], 
+        3.05823 + 0.5 Part[{{3.05823, 0.94177, 3.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, 0.94177, 2.05823}, {
+       4.05823 + 0.5 Part[{{4.05823, 0.94177, 2.05823}, {-1, 1, -1}}, 3], 
+        0.94177 + 0.5 Part[{{4.05823, 0.94177, 2.05823}, {-1, 1, -1}}, 3], 
+        2.05823 + 0.5 Part[{{4.05823, 0.94177, 2.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.54333, 1, 1}, {
+       4.54333 + 0.5 
+         Part[{{4.54333, 1, 1}, {-3.3094, 5.96046*^-8, 8.9407*^-8}}, 3], 1 + 
+        0.5 Part[{{4.54333, 1, 1}, {-3.3094, 5.96046*^-8, 8.9407*^-8}}, 3], 1 + 
+        0.5 Part[{{4.54333, 1, 1}, {-3.3094, 5.96046*^-8, 8.9407*^-8}}, 3]}}],
+      Arrow3DBox[{{1.05823, -0.0582305, 4.05823}, {
+       1.05823 + 0.5 
+         Part[{{1.05823, -0.0582305, 4.05823}, {-1, 1, -1}}, 3], -0.0582305 + 
+        0.5 Part[{{1.05823, -0.0582305, 4.05823}, {-1, 1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{1.05823, -0.0582305, 4.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{2.05823, -0.0582305, 3.05823}, {
+       2.05823 + 0.5 
+         Part[{{2.05823, -0.0582305, 3.05823}, {-1, 1, -1}}, 3], -0.0582305 + 
+        0.5 Part[{{2.05823, -0.0582305, 3.05823}, {-1, 1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{2.05823, -0.0582305, 3.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, -0.0582305, 2.05823}, {
+       3.05823 + 0.5 
+         Part[{{3.05823, -0.0582305, 2.05823}, {-1, 1, -1}}, 3], -0.0582305 + 
+        0.5 Part[{{3.05823, -0.0582305, 2.05823}, {-1, 1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{3.05823, -0.0582305, 2.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, -0.0582305, 1.05823}, {
+       4.05823 + 0.5 
+         Part[{{4.05823, -0.0582305, 1.05823}, {-1, 1, -1}}, 3], -0.0582305 + 
+        0.5 Part[{{4.05823, -0.0582305, 1.05823}, {-1, 1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{4.05823, -0.0582305, 1.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.54333, 0, -2.60311*^-9}, {
+       4.54333 + 0.5 
+         Part[{{4.54333, 0, -2.60311*^-9}, {-3.3094, 0, 4.47035*^-8}}, 3], 
+        0.5 Part[{{4.54333, 0, -2.60311*^-9}, {-3.3094, 0, 4.47035*^-8}}, 
+          3], -2.60311*^-9 + 
+        0.5 Part[{{4.54333, 0, -2.60311*^-9}, {-3.3094, 0, 4.47035*^-8}}, 
+           3]}}], 
+     Arrow3DBox[{{0.0582305, -1.05823, 4.05823}, {
+       0.0582305 + 
+        0.5 Part[{{0.0582305, -1.05823, 4.05823}, {-1, 1, -1}}, 3], -1.05823 + 
+        0.5 Part[{{0.0582305, -1.05823, 4.05823}, {-1, 1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{0.0582305, -1.05823, 4.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{1.05823, -1.05823, 3.05823}, {
+       1.05823 + 0.5 
+         Part[{{1.05823, -1.05823, 3.05823}, {-1, 1, -1}}, 3], -1.05823 + 
+        0.5 Part[{{1.05823, -1.05823, 3.05823}, {-1, 1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{1.05823, -1.05823, 3.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{2.05823, -1.05823, 2.05823}, {
+       2.05823 + 0.5 
+         Part[{{2.05823, -1.05823, 2.05823}, {-1, 1, -1}}, 3], -1.05823 + 
+        0.5 Part[{{2.05823, -1.05823, 2.05823}, {-1, 1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{2.05823, -1.05823, 2.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, -1.05823, 1.05823}, {
+       3.05823 + 0.5 
+         Part[{{3.05823, -1.05823, 1.05823}, {-1, 1, -1}}, 3], -1.05823 + 
+        0.5 Part[{{3.05823, -1.05823, 1.05823}, {-1, 1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{3.05823, -1.05823, 1.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, -1.05823, 0.0582305}, {
+       4.05823 + 0.5 
+         Part[{{4.05823, -1.05823, 0.0582305}, {-1, 1, -1}}, 3], -1.05823 + 
+        0.5 Part[{{4.05823, -1.05823, 0.0582305}, {-1, 1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{4.05823, -1.05823, 0.0582305}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.54333, -1, -1}, {
+       4.54333 + 0.5 
+         Part[{{4.54333, -1, -1}, {-3.3094, -1.19209*^-7, -5.96046*^-8}}, 
+           3], -1 + 0.5 
+         Part[{{4.54333, -1, -1}, {-3.3094, -1.19209*^-7, -5.96046*^-8}}, 
+           3], -1 + 0.5 
+         Part[{{4.54333, -1, -1}, {-3.3094, -1.19209*^-7, -5.96046*^-8}}, 
+           3]}}], Arrow3DBox[{{-0.94177, -2.05823, 
+       4.05823}, {-0.94177 + 
+        0.5 Part[{{-0.94177, -2.05823, 4.05823}, {-1, 1, -1}}, 3], -2.05823 + 
+        0.5 Part[{{-0.94177, -2.05823, 4.05823}, {-1, 1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-0.94177, -2.05823, 4.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{0.0582305, -2.05823, 3.05823}, {
+       0.0582305 + 
+        0.5 Part[{{0.0582305, -2.05823, 3.05823}, {-1, 1, -1}}, 3], -2.05823 + 
+        0.5 Part[{{0.0582305, -2.05823, 3.05823}, {-1, 1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{0.0582305, -2.05823, 3.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{1.05823, -2.05823, 2.05823}, {
+       1.05823 + 0.5 
+         Part[{{1.05823, -2.05823, 2.05823}, {-1, 1, -1}}, 3], -2.05823 + 
+        0.5 Part[{{1.05823, -2.05823, 2.05823}, {-1, 1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{1.05823, -2.05823, 2.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{2.05823, -2.05823, 1.05823}, {
+       2.05823 + 0.5 
+         Part[{{2.05823, -2.05823, 1.05823}, {-1, 1, -1}}, 3], -2.05823 + 
+        0.5 Part[{{2.05823, -2.05823, 1.05823}, {-1, 1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{2.05823, -2.05823, 1.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, -2.05823, 0.0582305}, {
+       3.05823 + 0.5 
+         Part[{{3.05823, -2.05823, 0.0582305}, {-1, 1, -1}}, 3], -2.05823 + 
+        0.5 Part[{{3.05823, -2.05823, 0.0582305}, {-1, 1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{3.05823, -2.05823, 0.0582305}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, -2.05823, -0.94177}, {
+       4.05823 + 0.5 
+         Part[{{4.05823, -2.05823, -0.94177}, {-1, 1, -1}}, 3], -2.05823 + 
+        0.5 Part[{{4.05823, -2.05823, -0.94177}, {-1, 1, -1}}, 3], -0.94177 + 
+        0.5 Part[{{4.05823, -2.05823, -0.94177}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.54333, -2, -2}, {
+       4.54333 + 0.5 
+         Part[{{4.54333, -2, -2}, {-3.3094, 0, 1.49012*^-8}}, 3], -2 + 
+        0.5 Part[{{4.54333, -2, -2}, {-3.3094, 0, 1.49012*^-8}}, 3], -2 + 
+        0.5 Part[{{4.54333, -2, -2}, {-3.3094, 0, 1.49012*^-8}}, 3]}}], 
+     Arrow3DBox[{{-1.94177, -3.05823, 
+       4.05823}, {-1.94177 + 
+        0.5 Part[{{-1.94177, -3.05823, 4.05823}, {-1, 1, -1}}, 3], -3.05823 + 
+        0.5 Part[{{-1.94177, -3.05823, 4.05823}, {-1, 1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-1.94177, -3.05823, 4.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{-0.94177, -3.05823, 
+       3.05823}, {-0.94177 + 
+        0.5 Part[{{-0.94177, -3.05823, 3.05823}, {-1, 1, -1}}, 3], -3.05823 + 
+        0.5 Part[{{-0.94177, -3.05823, 3.05823}, {-1, 1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-0.94177, -3.05823, 3.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{0.0582305, -3.05823, 2.05823}, {
+       0.0582305 + 
+        0.5 Part[{{0.0582305, -3.05823, 2.05823}, {-1, 1, -1}}, 3], -3.05823 + 
+        0.5 Part[{{0.0582305, -3.05823, 2.05823}, {-1, 1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{0.0582305, -3.05823, 2.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{1.05823, -3.05823, 1.05823}, {
+       1.05823 + 0.5 
+         Part[{{1.05823, -3.05823, 1.05823}, {-1, 1, -1}}, 3], -3.05823 + 
+        0.5 Part[{{1.05823, -3.05823, 1.05823}, {-1, 1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{1.05823, -3.05823, 1.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{2.05823, -3.05823, 0.0582305}, {
+       2.05823 + 0.5 
+         Part[{{2.05823, -3.05823, 0.0582305}, {-1, 1, -1}}, 3], -3.05823 + 
+        0.5 Part[{{2.05823, -3.05823, 0.0582305}, {-1, 1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{2.05823, -3.05823, 0.0582305}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, -3.05823, -0.94177}, {
+       3.05823 + 0.5 
+         Part[{{3.05823, -3.05823, -0.94177}, {-1, 1, -1}}, 3], -3.05823 + 
+        0.5 Part[{{3.05823, -3.05823, -0.94177}, {-1, 1, -1}}, 3], -0.94177 + 
+        0.5 Part[{{3.05823, -3.05823, -0.94177}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, -3.05823, -1.94177}, {
+       4.05823 + 0.5 
+         Part[{{4.05823, -3.05823, -1.94177}, {-1, 1, -1}}, 3], -3.05823 + 
+        0.5 Part[{{4.05823, -3.05823, -1.94177}, {-1, 1, -1}}, 3], -1.94177 + 
+        0.5 Part[{{4.05823, -3.05823, -1.94177}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.54333, -3, -3}, {
+       4.54333 + 0.5 
+         Part[{{4.54333, -3, -3}, {-3.3094, 1.19209*^-7, -2.08616*^-7}}, 
+           3], -3 + 0.5 
+         Part[{{4.54333, -3, -3}, {-3.3094, 1.19209*^-7, -2.08616*^-7}}, 
+           3], -3 + 0.5 
+         Part[{{4.54333, -3, -3}, {-3.3094, 1.19209*^-7, -2.08616*^-7}}, 
+           3]}}], Arrow3DBox[{{-2.94177, -4.05823, 
+       4.05823}, {-2.94177 + 
+        0.5 Part[{{-2.94177, -4.05823, 4.05823}, {-1, 1, -1}}, 3], -4.05823 + 
+        0.5 Part[{{-2.94177, -4.05823, 4.05823}, {-1, 1, -1}}, 3], 4.05823 + 
+        0.5 Part[{{-2.94177, -4.05823, 4.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{-1.94177, -4.05823, 
+       3.05823}, {-1.94177 + 
+        0.5 Part[{{-1.94177, -4.05823, 3.05823}, {-1, 1, -1}}, 3], -4.05823 + 
+        0.5 Part[{{-1.94177, -4.05823, 3.05823}, {-1, 1, -1}}, 3], 3.05823 + 
+        0.5 Part[{{-1.94177, -4.05823, 3.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{-0.94177, -4.05823, 
+       2.05823}, {-0.94177 + 
+        0.5 Part[{{-0.94177, -4.05823, 2.05823}, {-1, 1, -1}}, 3], -4.05823 + 
+        0.5 Part[{{-0.94177, -4.05823, 2.05823}, {-1, 1, -1}}, 3], 2.05823 + 
+        0.5 Part[{{-0.94177, -4.05823, 2.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{0.0582305, -4.05823, 1.05823}, {
+       0.0582305 + 
+        0.5 Part[{{0.0582305, -4.05823, 1.05823}, {-1, 1, -1}}, 3], -4.05823 + 
+        0.5 Part[{{0.0582305, -4.05823, 1.05823}, {-1, 1, -1}}, 3], 1.05823 + 
+        0.5 Part[{{0.0582305, -4.05823, 1.05823}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{1.05823, -4.05823, 0.0582305}, {
+       1.05823 + 0.5 
+         Part[{{1.05823, -4.05823, 0.0582305}, {-1, 1, -1}}, 3], -4.05823 + 
+        0.5 Part[{{1.05823, -4.05823, 0.0582305}, {-1, 1, -1}}, 3], 0.0582305 + 
+        0.5 Part[{{1.05823, -4.05823, 0.0582305}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{2.05823, -4.05823, -0.94177}, {
+       2.05823 + 0.5 
+         Part[{{2.05823, -4.05823, -0.94177}, {-1, 1, -1}}, 3], -4.05823 + 
+        0.5 Part[{{2.05823, -4.05823, -0.94177}, {-1, 1, -1}}, 3], -0.94177 + 
+        0.5 Part[{{2.05823, -4.05823, -0.94177}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, -4.05823, -1.94177}, {
+       3.05823 + 0.5 
+         Part[{{3.05823, -4.05823, -1.94177}, {-1, 1, -1}}, 3], -4.05823 + 
+        0.5 Part[{{3.05823, -4.05823, -1.94177}, {-1, 1, -1}}, 3], -1.94177 + 
+        0.5 Part[{{3.05823, -4.05823, -1.94177}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, -4.05823, -2.94177}, {
+       4.05823 + 0.5 
+         Part[{{4.05823, -4.05823, -2.94177}, {-1, 1, -1}}, 3], -4.05823 + 
+        0.5 Part[{{4.05823, -4.05823, -2.94177}, {-1, 1, -1}}, 3], -2.94177 + 
+        0.5 Part[{{4.05823, -4.05823, -2.94177}, {-1, 1, -1}}, 3]}}], 
+     Arrow3DBox[{{4.54333, -4, -4}, {
+       4.54333 + 0.5 
+         Part[{{4.54333, -4, -4}, {-3.3094, 1.19209*^-7, 5.96046*^-8}}, 
+           3], -4 + 0.5 
+         Part[{{4.54333, -4, -4}, {-3.3094, 1.19209*^-7, 5.96046*^-8}}, 
+           3], -4 + 0.5 
+         Part[{{4.54333, -4, -4}, {-3.3094, 1.19209*^-7, 5.96046*^-8}}, 3]}}],
+      Arrow3DBox[{{-4, -4.54333, 4}, {-4 + 
+        0.5 Part[{{-4, -4.54333, 4}, {5.96046*^-8, 3.3094, 0}}, 3], -4.54333 + 
+        0.5 Part[{{-4, -4.54333, 4}, {5.96046*^-8, 3.3094, 0}}, 3], 4 + 
+        0.5 Part[{{-4, -4.54333, 4}, {5.96046*^-8, 3.3094, 0}}, 3]}}], 
+     Arrow3DBox[{{-3, -4.54333, 3}, {-3 + 
+        0.5 Part[{{-3, -4.54333, 3}, {-1.04308*^-7, 3.3094, 1.19209*^-7}}, 
+           3], -4.54333 + 
+        0.5 Part[{{-3, -4.54333, 3}, {-1.04308*^-7, 3.3094, 1.19209*^-7}}, 3],
+         3 + 0.5 
+         Part[{{-3, -4.54333, 3}, {-1.04308*^-7, 3.3094, 1.19209*^-7}}, 3]}}],
+      Arrow3DBox[{{-2, -4.54333, 2}, {-2 + 
+        0.5 Part[{{-2, -4.54333, 2}, {8.9407*^-8, 3.3094, -5.96046*^-8}}, 
+           3], -4.54333 + 
+        0.5 Part[{{-2, -4.54333, 2}, {8.9407*^-8, 3.3094, -5.96046*^-8}}, 3], 
+        2 + 0.5 Part[{{-2, -4.54333, 2}, {8.9407*^-8, 3.3094, -5.96046*^-8}}, 
+           3]}}], Arrow3DBox[{{-1, -4.54333, 1}, {-1 + 
+        0.5 Part[{{-1, -4.54333, 1}, {-5.96046*^-8, 3.3094, 8.9407*^-8}}, 
+           3], -4.54333 + 
+        0.5 Part[{{-1, -4.54333, 1}, {-5.96046*^-8, 3.3094, 8.9407*^-8}}, 3], 
+        1 + 0.5 Part[{{-1, -4.54333, 1}, {-5.96046*^-8, 3.3094, 8.9407*^-8}}, 
+           3]}}], Arrow3DBox[{{0, -4.54333, -2.60311*^-9}, {
+       0.5 Part[{{0, -4.54333, -2.60311*^-9}, {0, 3.3094, 4.47035*^-8}}, 
+          3], -4.54333 + 
+        0.5 Part[{{0, -4.54333, -2.60311*^-9}, {0, 3.3094, 4.47035*^-8}}, 
+           3], -2.60311*^-9 + 
+        0.5 Part[{{0, -4.54333, -2.60311*^-9}, {0, 3.3094, 4.47035*^-8}}, 
+           3]}}], Arrow3DBox[{{1, -4.54333, -1}, {
+       1 + 0.5 Part[{{1, -4.54333, -1}, {1.19209*^-7, 3.3094, -5.96046*^-8}}, 
+           3], -4.54333 + 
+        0.5 Part[{{1, -4.54333, -1}, {1.19209*^-7, 3.3094, -5.96046*^-8}}, 
+           3], -1 + 0.5 
+         Part[{{1, -4.54333, -1}, {1.19209*^-7, 3.3094, -5.96046*^-8}}, 3]}}],
+      Arrow3DBox[{{2, -4.54333, -2}, {
+       2 + 0.5 Part[{{2, -4.54333, -2}, {0, 3.3094, 1.49012*^-8}}, 
+           3], -4.54333 + 
+        0.5 Part[{{2, -4.54333, -2}, {0, 3.3094, 1.49012*^-8}}, 3], -2 + 
+        0.5 Part[{{2, -4.54333, -2}, {0, 3.3094, 1.49012*^-8}}, 3]}}], 
+     Arrow3DBox[{{3, -4.54333, -3}, {
+       3 + 0.5 Part[{{3, -4.54333, -3}, {-1.19209*^-7, 3.3094, -2.08616*^-7}},
+            3], -4.54333 + 
+        0.5 Part[{{3, -4.54333, -3}, {-1.19209*^-7, 3.3094, -2.08616*^-7}}, 
+           3], -3 + 0.5 
+         Part[{{3, -4.54333, -3}, {-1.19209*^-7, 3.3094, -2.08616*^-7}}, 
+           3]}}], Arrow3DBox[{{4, -4.54333, -4}, {
+       4 + 0.5 Part[{{4, -4.54333, -4}, {-1.19209*^-7, 3.3094, 5.96046*^-8}}, 
+           3], -4.54333 + 
+        0.5 Part[{{4, -4.54333, -4}, {-1.19209*^-7, 3.3094, 5.96046*^-8}}, 
+           3], -4 + 0.5 
+         Part[{{4, -4.54333, -4}, {-1.19209*^-7, 3.3094, 5.96046*^-8}}, 3]}}],
+      Arrow3DBox[{{4.75226, -4.75226, -4.75226}, {
+       4.75226 + 0.5 
+         Part[{{4.75226, -4.75226, -4.75226}, {-1.32137, 1.32137, 1.32137}}, 
+           3], -4.75226 + 
+        0.5 Part[{{4.75226, -4.75226, -4.75226}, {-1.32137, 1.32137, 
+           1.32137}}, 3], -4.75226 + 
+        0.5 Part[{{4.75226, -4.75226, -4.75226}, {-1.32137, 1.32137, 
+           1.32137}}, 3]}}], 
+     Arrow3DBox[{{-4, 4, -4.54333}, {-4 + 
+        0.5 Part[{{-4, 4, -4.54333}, {5.96046*^-8, -5.96046*^-8, 3.3094}}, 3],
+         4 + 0.5 
+         Part[{{-4, 4, -4.54333}, {5.96046*^-8, -5.96046*^-8, 3.3094}}, 
+           3], -4.54333 + 
+        0.5 Part[{{-4, 4, -4.54333}, {5.96046*^-8, -5.96046*^-8, 3.3094}}, 
+           3]}}], Arrow3DBox[{{-3, 3, -4.54333}, {-3 + 
+        0.5 Part[{{-3, 3, -4.54333}, {-5.96046*^-8, 1.78814*^-7, 3.3094}}, 3],
+         3 + 0.5 
+         Part[{{-3, 3, -4.54333}, {-5.96046*^-8, 1.78814*^-7, 3.3094}}, 
+           3], -4.54333 + 
+        0.5 Part[{{-3, 3, -4.54333}, {-5.96046*^-8, 1.78814*^-7, 3.3094}}, 
+           3]}}], Arrow3DBox[{{-2.94177, 
+       4.05823, -4.05823}, {-2.94177 + 
+        0.5 Part[{{-2.94177, 4.05823, -4.05823}, {-1, -1, 1}}, 3], 4.05823 + 
+        0.5 Part[{{-2.94177, 4.05823, -4.05823}, {-1, -1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-2.94177, 4.05823, -4.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{-2, 2, -4.54333}, {-2 + 
+        0.5 Part[{{-2, 2, -4.54333}, {0, 5.96046*^-8, 3.3094}}, 3], 2 + 
+        0.5 Part[{{-2, 2, -4.54333}, {0, 5.96046*^-8, 3.3094}}, 3], -4.54333 + 
+        0.5 Part[{{-2, 2, -4.54333}, {0, 5.96046*^-8, 3.3094}}, 3]}}], 
+     Arrow3DBox[{{-1.94177, 
+       3.05823, -4.05823}, {-1.94177 + 
+        0.5 Part[{{-1.94177, 3.05823, -4.05823}, {-1, -1, 1}}, 3], 3.05823 + 
+        0.5 Part[{{-1.94177, 3.05823, -4.05823}, {-1, -1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-1.94177, 3.05823, -4.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{-1.94177, 
+       4.05823, -3.05823}, {-1.94177 + 
+        0.5 Part[{{-1.94177, 4.05823, -3.05823}, {-1, -1, 1}}, 3], 4.05823 + 
+        0.5 Part[{{-1.94177, 4.05823, -3.05823}, {-1, -1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-1.94177, 4.05823, -3.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{-1, 1, -4.54333}, {-1 + 
+        0.5 Part[{{-1, 1, -4.54333}, {-5.96046*^-8, 1.19209*^-7, 3.3094}}, 3],
+         1 + 0.5 
+         Part[{{-1, 1, -4.54333}, {-5.96046*^-8, 1.19209*^-7, 3.3094}}, 
+           3], -4.54333 + 
+        0.5 Part[{{-1, 1, -4.54333}, {-5.96046*^-8, 1.19209*^-7, 3.3094}}, 
+           3]}}], Arrow3DBox[{{-0.94177, 
+       2.05823, -4.05823}, {-0.94177 + 
+        0.5 Part[{{-0.94177, 2.05823, -4.05823}, {-1, -1, 1}}, 3], 2.05823 + 
+        0.5 Part[{{-0.94177, 2.05823, -4.05823}, {-1, -1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-0.94177, 2.05823, -4.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{-0.94177, 
+       3.05823, -3.05823}, {-0.94177 + 
+        0.5 Part[{{-0.94177, 3.05823, -3.05823}, {-1, -1, 1}}, 3], 3.05823 + 
+        0.5 Part[{{-0.94177, 3.05823, -3.05823}, {-1, -1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-0.94177, 3.05823, -3.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{-0.94177, 
+       4.05823, -2.05823}, {-0.94177 + 
+        0.5 Part[{{-0.94177, 4.05823, -2.05823}, {-1, -1, 1}}, 3], 4.05823 + 
+        0.5 Part[{{-0.94177, 4.05823, -2.05823}, {-1, -1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{-0.94177, 4.05823, -2.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{-3.47081*^-9, 0, -4.54333}, {-3.47081*^-9 + 
+        0.5 Part[{{-3.47081*^-9, 0, -4.54333}, {5.96046*^-8, 0, 3.3094}}, 3], 
+        0.5 
+        Part[{{-3.47081*^-9, 0, -4.54333}, {5.96046*^-8, 0, 3.3094}}, 
+          3], -4.54333 + 
+        0.5 Part[{{-3.47081*^-9, 0, -4.54333}, {5.96046*^-8, 0, 3.3094}}, 
+           3]}}], Arrow3DBox[{{0.0582305, 1.05823, -4.05823}, {
+       0.0582305 + 0.5 Part[{{0.0582305, 1.05823, -4.05823}, {-1, -1, 1}}, 3],
+         1.05823 + 
+        0.5 Part[{{0.0582305, 1.05823, -4.05823}, {-1, -1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{0.0582305, 1.05823, -4.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{0.0582305, 2.05823, -3.05823}, {
+       0.0582305 + 0.5 Part[{{0.0582305, 2.05823, -3.05823}, {-1, -1, 1}}, 3],
+         2.05823 + 
+        0.5 Part[{{0.0582305, 2.05823, -3.05823}, {-1, -1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{0.0582305, 2.05823, -3.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{0.0582305, 3.05823, -2.05823}, {
+       0.0582305 + 0.5 Part[{{0.0582305, 3.05823, -2.05823}, {-1, -1, 1}}, 3],
+         3.05823 + 
+        0.5 Part[{{0.0582305, 3.05823, -2.05823}, {-1, -1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{0.0582305, 3.05823, -2.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{0.0582305, 4.05823, -1.05823}, {
+       0.0582305 + 0.5 Part[{{0.0582305, 4.05823, -1.05823}, {-1, -1, 1}}, 3],
+         4.05823 + 
+        0.5 Part[{{0.0582305, 4.05823, -1.05823}, {-1, -1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{0.0582305, 4.05823, -1.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{1, -1, -4.54333}, {
+       1 + 0.5 Part[{{1, -1, -4.54333}, {5.96046*^-8, -5.96046*^-8, 3.3094}}, 
+           3], -1 + 0.5 
+         Part[{{1, -1, -4.54333}, {5.96046*^-8, -5.96046*^-8, 3.3094}}, 
+           3], -4.54333 + 
+        0.5 Part[{{1, -1, -4.54333}, {5.96046*^-8, -5.96046*^-8, 3.3094}}, 
+           3]}}], Arrow3DBox[{{1.05823, 0.0582305, -4.05823}, {
+       1.05823 + 0.5 Part[{{1.05823, 0.0582305, -4.05823}, {-1, -1, 1}}, 3], 
+        0.0582305 + 
+        0.5 Part[{{1.05823, 0.0582305, -4.05823}, {-1, -1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{1.05823, 0.0582305, -4.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{1.05823, 1.05823, -3.05823}, {
+       1.05823 + 0.5 Part[{{1.05823, 1.05823, -3.05823}, {-1, -1, 1}}, 3], 
+        1.05823 + 0.5 
+         Part[{{1.05823, 1.05823, -3.05823}, {-1, -1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{1.05823, 1.05823, -3.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{1.05823, 2.05823, -2.05823}, {
+       1.05823 + 0.5 Part[{{1.05823, 2.05823, -2.05823}, {-1, -1, 1}}, 3], 
+        2.05823 + 0.5 
+         Part[{{1.05823, 2.05823, -2.05823}, {-1, -1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{1.05823, 2.05823, -2.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{1.05823, 3.05823, -1.05823}, {
+       1.05823 + 0.5 Part[{{1.05823, 3.05823, -1.05823}, {-1, -1, 1}}, 3], 
+        3.05823 + 0.5 
+         Part[{{1.05823, 3.05823, -1.05823}, {-1, -1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{1.05823, 3.05823, -1.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{1.05823, 4.05823, -0.0582305}, {
+       1.05823 + 0.5 Part[{{1.05823, 4.05823, -0.0582305}, {-1, -1, 1}}, 3], 
+        4.05823 + 0.5 
+         Part[{{1.05823, 4.05823, -0.0582305}, {-1, -1, 1}}, 3], -0.0582305 + 
+        0.5 Part[{{1.05823, 4.05823, -0.0582305}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{2, -2, -4.54333}, {
+       2 + 0.5 Part[{{2, -2, -4.54333}, {5.96046*^-8, 5.96046*^-8, 3.3094}}, 
+           3], -2 + 0.5 
+         Part[{{2, -2, -4.54333}, {5.96046*^-8, 5.96046*^-8, 3.3094}}, 
+           3], -4.54333 + 
+        0.5 Part[{{2, -2, -4.54333}, {5.96046*^-8, 5.96046*^-8, 3.3094}}, 
+           3]}}], Arrow3DBox[{{2.05823, -0.94177, -4.05823}, {
+       2.05823 + 0.5 
+         Part[{{2.05823, -0.94177, -4.05823}, {-1, -1, 1}}, 3], -0.94177 + 
+        0.5 Part[{{2.05823, -0.94177, -4.05823}, {-1, -1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{2.05823, -0.94177, -4.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{2.05823, 0.0582305, -3.05823}, {
+       2.05823 + 0.5 Part[{{2.05823, 0.0582305, -3.05823}, {-1, -1, 1}}, 3], 
+        0.0582305 + 
+        0.5 Part[{{2.05823, 0.0582305, -3.05823}, {-1, -1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{2.05823, 0.0582305, -3.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{2.05823, 1.05823, -2.05823}, {
+       2.05823 + 0.5 Part[{{2.05823, 1.05823, -2.05823}, {-1, -1, 1}}, 3], 
+        1.05823 + 0.5 
+         Part[{{2.05823, 1.05823, -2.05823}, {-1, -1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{2.05823, 1.05823, -2.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{2.05823, 2.05823, -1.05823}, {
+       2.05823 + 0.5 Part[{{2.05823, 2.05823, -1.05823}, {-1, -1, 1}}, 3], 
+        2.05823 + 0.5 
+         Part[{{2.05823, 2.05823, -1.05823}, {-1, -1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{2.05823, 2.05823, -1.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{2.05823, 3.05823, -0.0582305}, {
+       2.05823 + 0.5 Part[{{2.05823, 3.05823, -0.0582305}, {-1, -1, 1}}, 3], 
+        3.05823 + 0.5 
+         Part[{{2.05823, 3.05823, -0.0582305}, {-1, -1, 1}}, 3], -0.0582305 + 
+        0.5 Part[{{2.05823, 3.05823, -0.0582305}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{2.05823, 4.05823, 0.94177}, {
+       2.05823 + 0.5 Part[{{2.05823, 4.05823, 0.94177}, {-1, -1, 1}}, 3], 
+        4.05823 + 0.5 Part[{{2.05823, 4.05823, 0.94177}, {-1, -1, 1}}, 3], 
+        0.94177 + 0.5 Part[{{2.05823, 4.05823, 0.94177}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{3, -3, -4.54333}, {
+       3 + 0.5 Part[{{3, -3, -4.54333}, {1.19209*^-7, -1.19209*^-7, 3.3094}}, 
+           3], -3 + 0.5 
+         Part[{{3, -3, -4.54333}, {1.19209*^-7, -1.19209*^-7, 3.3094}}, 
+           3], -4.54333 + 
+        0.5 Part[{{3, -3, -4.54333}, {1.19209*^-7, -1.19209*^-7, 3.3094}}, 
+           3]}}], Arrow3DBox[{{3.05823, -1.94177, -4.05823}, {
+       3.05823 + 0.5 
+         Part[{{3.05823, -1.94177, -4.05823}, {-1, -1, 1}}, 3], -1.94177 + 
+        0.5 Part[{{3.05823, -1.94177, -4.05823}, {-1, -1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{3.05823, -1.94177, -4.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, -0.94177, -3.05823}, {
+       3.05823 + 0.5 
+         Part[{{3.05823, -0.94177, -3.05823}, {-1, -1, 1}}, 3], -0.94177 + 
+        0.5 Part[{{3.05823, -0.94177, -3.05823}, {-1, -1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{3.05823, -0.94177, -3.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, 0.0582305, -2.05823}, {
+       3.05823 + 0.5 Part[{{3.05823, 0.0582305, -2.05823}, {-1, -1, 1}}, 3], 
+        0.0582305 + 
+        0.5 Part[{{3.05823, 0.0582305, -2.05823}, {-1, -1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{3.05823, 0.0582305, -2.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, 1.05823, -1.05823}, {
+       3.05823 + 0.5 Part[{{3.05823, 1.05823, -1.05823}, {-1, -1, 1}}, 3], 
+        1.05823 + 0.5 
+         Part[{{3.05823, 1.05823, -1.05823}, {-1, -1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{3.05823, 1.05823, -1.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, 2.05823, -0.0582305}, {
+       3.05823 + 0.5 Part[{{3.05823, 2.05823, -0.0582305}, {-1, -1, 1}}, 3], 
+        2.05823 + 0.5 
+         Part[{{3.05823, 2.05823, -0.0582305}, {-1, -1, 1}}, 3], -0.0582305 + 
+        0.5 Part[{{3.05823, 2.05823, -0.0582305}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, 3.05823, 0.94177}, {
+       3.05823 + 0.5 Part[{{3.05823, 3.05823, 0.94177}, {-1, -1, 1}}, 3], 
+        3.05823 + 0.5 Part[{{3.05823, 3.05823, 0.94177}, {-1, -1, 1}}, 3], 
+        0.94177 + 0.5 Part[{{3.05823, 3.05823, 0.94177}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{3.05823, 4.05823, 1.94177}, {
+       3.05823 + 0.5 Part[{{3.05823, 4.05823, 1.94177}, {-1, -1, 1}}, 3], 
+        4.05823 + 0.5 Part[{{3.05823, 4.05823, 1.94177}, {-1, -1, 1}}, 3], 
+        1.94177 + 0.5 Part[{{3.05823, 4.05823, 1.94177}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{4, -4, -4.54333}, {
+       4 + 0.5 Part[{{4, -4, -4.54333}, {0, 5.96046*^-8, 3.3094}}, 3], -4 + 
+        0.5 Part[{{4, -4, -4.54333}, {0, 5.96046*^-8, 3.3094}}, 3], -4.54333 + 
+        0.5 Part[{{4, -4, -4.54333}, {0, 5.96046*^-8, 3.3094}}, 3]}}], 
+     Arrow3DBox[{{4.05823, -2.94177, -4.05823}, {
+       4.05823 + 0.5 
+         Part[{{4.05823, -2.94177, -4.05823}, {-1, -1, 1}}, 3], -2.94177 + 
+        0.5 Part[{{4.05823, -2.94177, -4.05823}, {-1, -1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{4.05823, -2.94177, -4.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, -1.94177, -3.05823}, {
+       4.05823 + 0.5 
+         Part[{{4.05823, -1.94177, -3.05823}, {-1, -1, 1}}, 3], -1.94177 + 
+        0.5 Part[{{4.05823, -1.94177, -3.05823}, {-1, -1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{4.05823, -1.94177, -3.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, -0.94177, -2.05823}, {
+       4.05823 + 0.5 
+         Part[{{4.05823, -0.94177, -2.05823}, {-1, -1, 1}}, 3], -0.94177 + 
+        0.5 Part[{{4.05823, -0.94177, -2.05823}, {-1, -1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{4.05823, -0.94177, -2.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, 0.0582305, -1.05823}, {
+       4.05823 + 0.5 Part[{{4.05823, 0.0582305, -1.05823}, {-1, -1, 1}}, 3], 
+        0.0582305 + 
+        0.5 Part[{{4.05823, 0.0582305, -1.05823}, {-1, -1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{4.05823, 0.0582305, -1.05823}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, 1.05823, -0.0582305}, {
+       4.05823 + 0.5 Part[{{4.05823, 1.05823, -0.0582305}, {-1, -1, 1}}, 3], 
+        1.05823 + 0.5 
+         Part[{{4.05823, 1.05823, -0.0582305}, {-1, -1, 1}}, 3], -0.0582305 + 
+        0.5 Part[{{4.05823, 1.05823, -0.0582305}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, 2.05823, 0.94177}, {
+       4.05823 + 0.5 Part[{{4.05823, 2.05823, 0.94177}, {-1, -1, 1}}, 3], 
+        2.05823 + 0.5 Part[{{4.05823, 2.05823, 0.94177}, {-1, -1, 1}}, 3], 
+        0.94177 + 0.5 Part[{{4.05823, 2.05823, 0.94177}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, 3.05823, 1.94177}, {
+       4.05823 + 0.5 Part[{{4.05823, 3.05823, 1.94177}, {-1, -1, 1}}, 3], 
+        3.05823 + 0.5 Part[{{4.05823, 3.05823, 1.94177}, {-1, -1, 1}}, 3], 
+        1.94177 + 0.5 Part[{{4.05823, 3.05823, 1.94177}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{4.05823, 4.05823, 2.94177}, {
+       4.05823 + 0.5 Part[{{4.05823, 4.05823, 2.94177}, {-1, -1, 1}}, 3], 
+        4.05823 + 0.5 Part[{{4.05823, 4.05823, 2.94177}, {-1, -1, 1}}, 3], 
+        2.94177 + 0.5 Part[{{4.05823, 4.05823, 2.94177}, {-1, -1, 1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, 
+       2.94177, -4.05823}, {-4.05823 + 
+        0.5 Part[{{-4.05823, 2.94177, -4.05823}, {1, 1, 1}}, 3], 2.94177 + 
+        0.5 Part[{{-4.05823, 2.94177, -4.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-4.05823, 2.94177, -4.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, 
+       1.94177, -4.05823}, {-3.05823 + 
+        0.5 Part[{{-3.05823, 1.94177, -4.05823}, {1, 1, 1}}, 3], 1.94177 + 
+        0.5 Part[{{-3.05823, 1.94177, -4.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-3.05823, 1.94177, -4.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, 
+       1.94177, -3.05823}, {-4.05823 + 
+        0.5 Part[{{-4.05823, 1.94177, -3.05823}, {1, 1, 1}}, 3], 1.94177 + 
+        0.5 Part[{{-4.05823, 1.94177, -3.05823}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-4.05823, 1.94177, -3.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-2.05823, 
+       0.94177, -4.05823}, {-2.05823 + 
+        0.5 Part[{{-2.05823, 0.94177, -4.05823}, {1, 1, 1}}, 3], 0.94177 + 
+        0.5 Part[{{-2.05823, 0.94177, -4.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-2.05823, 0.94177, -4.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, 
+       0.94177, -3.05823}, {-3.05823 + 
+        0.5 Part[{{-3.05823, 0.94177, -3.05823}, {1, 1, 1}}, 3], 0.94177 + 
+        0.5 Part[{{-3.05823, 0.94177, -3.05823}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-3.05823, 0.94177, -3.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, 
+       0.94177, -2.05823}, {-4.05823 + 
+        0.5 Part[{{-4.05823, 0.94177, -2.05823}, {1, 1, 1}}, 3], 0.94177 + 
+        0.5 Part[{{-4.05823, 0.94177, -2.05823}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{-4.05823, 0.94177, -2.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-1.05823, -0.0582305, -4.05823}, {-1.05823 + 
+        0.5 Part[{{-1.05823, -0.0582305, -4.05823}, {1, 1, 1}}, 
+           3], -0.0582305 + 
+        0.5 Part[{{-1.05823, -0.0582305, -4.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-1.05823, -0.0582305, -4.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-2.05823, -0.0582305, -3.05823}, {-2.05823 + 
+        0.5 Part[{{-2.05823, -0.0582305, -3.05823}, {1, 1, 1}}, 
+           3], -0.0582305 + 
+        0.5 Part[{{-2.05823, -0.0582305, -3.05823}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-2.05823, -0.0582305, -3.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, -0.0582305, -2.05823}, {-3.05823 + 
+        0.5 Part[{{-3.05823, -0.0582305, -2.05823}, {1, 1, 1}}, 
+           3], -0.0582305 + 
+        0.5 Part[{{-3.05823, -0.0582305, -2.05823}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{-3.05823, -0.0582305, -2.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, -0.0582305, -1.05823}, {-4.05823 + 
+        0.5 
+         Part[{{-4.05823, -0.0582305, -1.05823}, {1, 1, 1}}, 3], -0.0582305 + 
+        0.5 Part[{{-4.05823, -0.0582305, -1.05823}, {1, 1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{-4.05823, -0.0582305, -1.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-0.0582305, -1.05823, -4.05823}, {-0.0582305 + 
+        0.5 Part[{{-0.0582305, -1.05823, -4.05823}, {1, 1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{-0.0582305, -1.05823, -4.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-0.0582305, -1.05823, -4.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-1.05823, -1.05823, -3.05823}, {-1.05823 + 
+        0.5 Part[{{-1.05823, -1.05823, -3.05823}, {1, 1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{-1.05823, -1.05823, -3.05823}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-1.05823, -1.05823, -3.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-2.05823, -1.05823, -2.05823}, {-2.05823 + 
+        0.5 Part[{{-2.05823, -1.05823, -2.05823}, {1, 1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{-2.05823, -1.05823, -2.05823}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{-2.05823, -1.05823, -2.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, -1.05823, -1.05823}, {-3.05823 + 
+        0.5 Part[{{-3.05823, -1.05823, -1.05823}, {1, 1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{-3.05823, -1.05823, -1.05823}, {1, 1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{-3.05823, -1.05823, -1.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, -1.05823, -0.0582305}, {-4.05823 + 
+        0.5 Part[{{-4.05823, -1.05823, -0.0582305}, {1, 1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{-4.05823, -1.05823, -0.0582305}, {1, 1, 1}}, 
+           3], -0.0582305 + 
+        0.5 Part[{{-4.05823, -1.05823, -0.0582305}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{0.94177, -2.05823, -4.05823}, {
+       0.94177 + 0.5 
+         Part[{{0.94177, -2.05823, -4.05823}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{0.94177, -2.05823, -4.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{0.94177, -2.05823, -4.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-0.0582305, -2.05823, -3.05823}, {-0.0582305 + 
+        0.5 Part[{{-0.0582305, -2.05823, -3.05823}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{-0.0582305, -2.05823, -3.05823}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-0.0582305, -2.05823, -3.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-1.05823, -2.05823, -2.05823}, {-1.05823 + 
+        0.5 Part[{{-1.05823, -2.05823, -2.05823}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{-1.05823, -2.05823, -2.05823}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{-1.05823, -2.05823, -2.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-2.05823, -2.05823, -1.05823}, {-2.05823 + 
+        0.5 Part[{{-2.05823, -2.05823, -1.05823}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{-2.05823, -2.05823, -1.05823}, {1, 1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{-2.05823, -2.05823, -1.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, -2.05823, -0.0582305}, {-3.05823 + 
+        0.5 Part[{{-3.05823, -2.05823, -0.0582305}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{-3.05823, -2.05823, -0.0582305}, {1, 1, 1}}, 
+           3], -0.0582305 + 
+        0.5 Part[{{-3.05823, -2.05823, -0.0582305}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, -2.05823, 
+       0.94177}, {-4.05823 + 
+        0.5 Part[{{-4.05823, -2.05823, 0.94177}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{-4.05823, -2.05823, 0.94177}, {1, 1, 1}}, 3], 0.94177 + 
+        0.5 Part[{{-4.05823, -2.05823, 0.94177}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{1.94177, -3.05823, -4.05823}, {
+       1.94177 + 0.5 
+         Part[{{1.94177, -3.05823, -4.05823}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{1.94177, -3.05823, -4.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{1.94177, -3.05823, -4.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{0.94177, -3.05823, -3.05823}, {
+       0.94177 + 0.5 
+         Part[{{0.94177, -3.05823, -3.05823}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{0.94177, -3.05823, -3.05823}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{0.94177, -3.05823, -3.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-0.0582305, -3.05823, -2.05823}, {-0.0582305 + 
+        0.5 Part[{{-0.0582305, -3.05823, -2.05823}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-0.0582305, -3.05823, -2.05823}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{-0.0582305, -3.05823, -2.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-1.05823, -3.05823, -1.05823}, {-1.05823 + 
+        0.5 Part[{{-1.05823, -3.05823, -1.05823}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-1.05823, -3.05823, -1.05823}, {1, 1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{-1.05823, -3.05823, -1.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-2.05823, -3.05823, -0.0582305}, {-2.05823 + 
+        0.5 Part[{{-2.05823, -3.05823, -0.0582305}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-2.05823, -3.05823, -0.0582305}, {1, 1, 1}}, 
+           3], -0.0582305 + 
+        0.5 Part[{{-2.05823, -3.05823, -0.0582305}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, -3.05823, 
+       0.94177}, {-3.05823 + 
+        0.5 Part[{{-3.05823, -3.05823, 0.94177}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-3.05823, -3.05823, 0.94177}, {1, 1, 1}}, 3], 0.94177 + 
+        0.5 Part[{{-3.05823, -3.05823, 0.94177}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, -3.05823, 
+       1.94177}, {-4.05823 + 
+        0.5 Part[{{-4.05823, -3.05823, 1.94177}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{-4.05823, -3.05823, 1.94177}, {1, 1, 1}}, 3], 1.94177 + 
+        0.5 Part[{{-4.05823, -3.05823, 1.94177}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{2.94177, -4.05823, -4.05823}, {
+       2.94177 + 0.5 
+         Part[{{2.94177, -4.05823, -4.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{2.94177, -4.05823, -4.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{2.94177, -4.05823, -4.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{1.94177, -4.05823, -3.05823}, {
+       1.94177 + 0.5 
+         Part[{{1.94177, -4.05823, -3.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{1.94177, -4.05823, -3.05823}, {1, 1, 1}}, 3], -3.05823 + 
+        0.5 Part[{{1.94177, -4.05823, -3.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{0.94177, -4.05823, -2.05823}, {
+       0.94177 + 0.5 
+         Part[{{0.94177, -4.05823, -2.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{0.94177, -4.05823, -2.05823}, {1, 1, 1}}, 3], -2.05823 + 
+        0.5 Part[{{0.94177, -4.05823, -2.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-0.0582305, -4.05823, -1.05823}, {-0.0582305 + 
+        0.5 Part[{{-0.0582305, -4.05823, -1.05823}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-0.0582305, -4.05823, -1.05823}, {1, 1, 1}}, 3], -1.05823 + 
+        0.5 Part[{{-0.0582305, -4.05823, -1.05823}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-1.05823, -4.05823, -0.0582305}, {-1.05823 + 
+        0.5 Part[{{-1.05823, -4.05823, -0.0582305}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-1.05823, -4.05823, -0.0582305}, {1, 1, 1}}, 
+           3], -0.0582305 + 
+        0.5 Part[{{-1.05823, -4.05823, -0.0582305}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-2.05823, -4.05823, 
+       0.94177}, {-2.05823 + 
+        0.5 Part[{{-2.05823, -4.05823, 0.94177}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-2.05823, -4.05823, 0.94177}, {1, 1, 1}}, 3], 0.94177 + 
+        0.5 Part[{{-2.05823, -4.05823, 0.94177}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-3.05823, -4.05823, 
+       1.94177}, {-3.05823 + 
+        0.5 Part[{{-3.05823, -4.05823, 1.94177}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-3.05823, -4.05823, 1.94177}, {1, 1, 1}}, 3], 1.94177 + 
+        0.5 Part[{{-3.05823, -4.05823, 1.94177}, {1, 1, 1}}, 3]}}], 
+     Arrow3DBox[{{-4.05823, -4.05823, 
+       2.94177}, {-4.05823 + 
+        0.5 Part[{{-4.05823, -4.05823, 2.94177}, {1, 1, 1}}, 3], -4.05823 + 
+        0.5 Part[{{-4.05823, -4.05823, 2.94177}, {1, 1, 1}}, 3], 2.94177 + 
+        0.5 Part[{{-4.05823, -4.05823, 2.94177}, {1, 1, 1}}, 3]}}]}}},
+  Axes->True,
+  AxesLabel->{None, None, None},
+  BoxRatios->{1, 1, 1},
+  FaceGridsStyle->Automatic,
+  ImageSize->{511., 582.},
+  PlotRange->{{-4.75226, 4.75226}, {-4.75226, 4.75226}, Automatic},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.02]}, {Automatic, Automatic}},
+  Ticks->{Automatic, Automatic, Automatic},
+  ViewPoint->{0.6437327449407607, -2.986160684193245, -1.4554904744688517`},
+  ViewVertical->{-0.21786057399895437`, -0.9003414513044865, 
+   0.37672541905183077`}]], "Output",
+ CellChangeTimes->{{3.640000460649919*^9, 3.640000472020749*^9}, 
+   3.640000515198698*^9, {3.640000676670265*^9, 3.640000702591683*^9}, 
+   3.640000861175357*^9, 3.640001158755719*^9}]
+}, Open  ]]
+},
+WindowSize->{1024, 554},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"10.1 for Linux x86 (64-bit) (March 23, 2015)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 3766, 85, 231, "Input"],
+Cell[4327, 107, 1458, 29, 55, "Input"],
+Cell[5788, 138, 141, 2, 32, "Input"],
+Cell[CellGroupData[{
+Cell[5954, 144, 536, 12, 32, "Input"],
+Cell[6493, 158, 5994, 106, 422, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12524, 269, 427, 8, 55, "Input"],
+Cell[12954, 279, 594, 12, 23, "Message"],
+Cell[13551, 293, 589, 12, 33, "Message"],
+Cell[14143, 307, 565, 12, 33, "Message"],
+Cell[14711, 321, 528, 11, 23, "Message"],
+Cell[15242, 334, 80645, 1416, 597, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
