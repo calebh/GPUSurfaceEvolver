@@ -24,10 +24,18 @@ GPUEvolver::GPUEvolver(Mesh* initMesh, int initItersUntilLambdaUpdate)
 	uint numTriangles = triangles.size();
 
 	cudaVertices = allocateInit<float3>(&(vertices[0]), numVertices);
-	cudaVertices2 = allocate<float3>(numVertices);
+	cudaVertices2 = allocateInit<float3>(&(vertices[0]), numVertices);
 	cudaTriangles = allocateInit<uint3>(&(triangles[0]), numTriangles);
-	cudaAreaForces = allocate<float3>(numVertices);
-	cudaVolumeForces = allocate<float3>(numVertices);
+
+	auto zeroForces = new float3[numVertices];
+	for (auto i = 0; i < numVertices; i++) {
+		zeroForces[i] = { 0.0f, 0.0f, 0.0f };
+	}
+
+	cudaAreaForces = allocateInit<float3>(&(zeroForces[0]), numVertices);
+	cudaVolumeForces = allocateInit<float3>(&(zeroForces[0]), numVertices);
+
+	delete zeroForces;
 
 	auto triangleOffset = new uint[numVertices];
 	auto trianglesByVertex = new uint2[numTriangles * 3];
@@ -92,6 +100,10 @@ uint2 GPUEvolver::rearrangeTri(uint3 tri, int pointIndex) {
 	return ret;
 }
 
+void GPUEvolver::synchronizeToMesh() {
+	mesh->updateDisplayBuffers(cudaVertices, cudaTriangles);
+}
+
 float GPUEvolver::stepSimulation(bool saveResults) {
 	float3* destinationVertices;
 	if (saveResults) {
@@ -106,7 +118,13 @@ float GPUEvolver::stepSimulation(bool saveResults) {
 		float3* temp = cudaVertices;
 		cudaVertices = cudaVertices2;
 		cudaVertices2 = temp;
+		synchronizeToMesh();
 	}
 
 	return area;
 }
+
+float GPUEvolver::getArea() { return -1337.0f; }
+float GPUEvolver::getMeanNetForce() { return -1337.0f; }
+float GPUEvolver::getMeanCurvature() { return -1337.0f; }
+float GPUEvolver::getVolume() { return -1337.0f; }

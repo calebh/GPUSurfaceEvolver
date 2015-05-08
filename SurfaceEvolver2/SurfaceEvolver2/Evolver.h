@@ -13,7 +13,6 @@ class Evolver
 public:
 	Evolver(Mesh* m, int initItersUntilLambdaUpdate);
 	~Evolver();
-	void findLambda();
 	void update();
 	void setOutputFormat(OutputType* format, int formatLength );
 	void outputData();
@@ -27,15 +26,18 @@ protected:
 	virtual float getMeanCurvature() = 0;
 	virtual float getVolume() = 0;
         
-    virtual void outputPoints() = 0;
+	/*
+	virtual void outputPoints() = 0;
     virtual void outputVolumeForces() = 0;
     virtual void outputAreaForces() = 0;
     virtual void outputNetForces() = 0;
+	*/
         
 	Mesh* mesh;
 	float lambda;
         
 private:
+	void findLambda();
 	int itersUntilLambdaUpdate;
 	int updateCount;
 	OutputType* format;

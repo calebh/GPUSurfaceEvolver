@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#define TINY_AMOUNT 0.000001
-#define LAMBDA_THRESHOLD      0.001
+#define TINY_AMOUNT 0.000001f
+#define LAMBDA_THRESHOLD      0.001f
 #define MAX_LAMBDA_ITERATIONS 100
 
 Evolver::Evolver(Mesh* initMesh, int initItersUntilLambdaUpdate) :
@@ -21,7 +21,7 @@ Evolver::~Evolver()
 void Evolver::findLambda() {
     float delta = 0;
     int i=0;
-    float temp = 0.0001;
+    float temp = 0.0001f;
     do {
         lambda += delta;
         float a1 = stepSimulation(false);
@@ -33,7 +33,6 @@ void Evolver::findLambda() {
         temp*=.9;
         i++;
     } while(abs(delta) > LAMBDA_THRESHOLD && i < MAX_LAMBDA_ITERATIONS);
-
 }
 
 void Evolver::update() {
@@ -67,7 +66,7 @@ void Evolver::outputData(){
             case MEAN_CURVATURE:
                 cout << getMeanCurvature();
                 break;
-            case POINTS:
+            /*case POINTS:
                 outputPoints();
                 break;
             case VOLUME_FORCES:
@@ -78,7 +77,7 @@ void Evolver::outputData(){
                 break;
             case NET_FORCES:
                 outputVolumeForces();
-                break;
+                break;*/
             default:
                 break;
         }

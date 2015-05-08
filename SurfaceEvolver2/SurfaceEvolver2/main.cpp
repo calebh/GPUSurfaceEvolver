@@ -1,8 +1,11 @@
 #include "Mesh.h"
+#include "ExternalMesh.h"
 #include "Device.h"
 #include "CameraNode.h"
 #include "ModelNode.h"
 #include "SceneManager.h"
+#include "TetrahedronMesh.h"
+#include "GPUEvolver.h"
 
 int main(void) {
 	int width = 800;
@@ -12,12 +15,13 @@ int main(void) {
 	// Device must be the very first thing created!
 	Device device(width, height, fullscreen);
 	
-	Mesh jeep("models/dragon.ply");
+	//ExternalMesh jeep("models/dragon.ply");
 	//Mesh jeep(127);
+	TetrahedronMesh tetra(10);
 	
 	SceneManager manager(&device);
 
-	CameraNode camera(width, height);
+	CameraNode camera(&device, width, height);
 	camera.getTransform().setTranslation(20.0f, 20.0f, 20.0f);
 	manager.addNode(&camera);
 
@@ -25,9 +29,8 @@ int main(void) {
 	//mn.getTransform().setScale(0.025f, 0.025f, 0.025f);
 	mn.getTransform().setScale(20.0f, 20.0f, 20.0f);
 	mn.getTransform().setTranslation(0.0f, 0.0f, 0.0f);
-	mn.setMesh(&jeep);
+	mn.setMesh(&tetra);
 	manager.addNode(&mn);
-	
 
 	ShaderProgram geometryProgram;
 	Shader geometryVertexShader("shaders/geometry_pass.vert", VERTEX);
@@ -37,22 +40,10 @@ int main(void) {
 	geometryProgram.link();
 	manager.setGeometryProgram(&geometryProgram);
 
+	GPUEvolver evolver(&tetra, 20);
+
 	while (device.run()) {
-		if (glfwGetKey(device.getWindow(), GLFW_KEY_W)) {
-			camera.getTransform().setTranslation(camera.getTransform().getTranslation() + camera.getLookVector());
-		}
-		else if (glfwGetKey(device.getWindow(), GLFW_KEY_S)) {
-			camera.getTransform().setTranslation(camera.getTransform().getTranslation() + camera.getLookVector() * -1.0f);
-		}
-
-		glm::vec3 horizontal = glm::normalize(glm::cross(camera.getUp(), camera.getLookVector()));
-		if (glfwGetKey(device.getWindow(), GLFW_KEY_A)) {
-			camera.getTransform().setTranslation(camera.getTransform().getTranslation() + horizontal);
-		}
-		else if (glfwGetKey(device.getWindow(), GLFW_KEY_D)) {
-			camera.getTransform().setTranslation(camera.getTransform().getTranslation() + horizontal * -1.0f);
-		}
-
+		evolver.update();
 		manager.drawAll();
 		device.endScene();
 	}

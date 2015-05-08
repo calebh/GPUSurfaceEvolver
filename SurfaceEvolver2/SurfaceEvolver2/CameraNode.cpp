@@ -1,12 +1,13 @@
 #include "CameraNode.h"
 
-CameraNode::CameraNode(int initialWidth, int initialHeight) :
+CameraNode::CameraNode(Device* initDevice, int initialWidth, int initialHeight) :
 	width(initialWidth),
 	height(initialHeight),
 	fov(0.785398163f),
 	near(0.01f),
 	far(5000.0f),
-	up(0.0f, 1.0f, 0.0f)
+	up(0.0f, 1.0f, 0.0f),
+	device(initDevice)
 {
 	float ratio = width / ((float)height);
 	projection = glm::perspective(fov, ratio, near, far);
@@ -26,6 +27,21 @@ void CameraNode::setFov(float f) {
 }
 
 void CameraNode::updateView() {
+	if (glfwGetKey(device->getWindow(), GLFW_KEY_W)) {
+		getTransform().setTranslation(getTransform().getTranslation() + getLookVector());
+	}
+	else if (glfwGetKey(device->getWindow(), GLFW_KEY_S)) {
+		getTransform().setTranslation(getTransform().getTranslation() + getLookVector() * -1.0f);
+	}
+
+	glm::vec3 horizontal = glm::normalize(glm::cross(getUp(), getLookVector()));
+	if (glfwGetKey(device->getWindow(), GLFW_KEY_A)) {
+		getTransform().setTranslation(getTransform().getTranslation() + horizontal);
+	}
+	else if (glfwGetKey(device->getWindow(), GLFW_KEY_D)) {
+		getTransform().setTranslation(getTransform().getTranslation() + horizontal * -1.0f);
+	}
+
 	view = glm::lookAt(getTransform().getTranslation(), lookAt, up);
 }
 

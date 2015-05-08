@@ -158,6 +158,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
   <ItemGroup>
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="Evolver.h" />
+    <ClInclude Include="ExternalMesh.h" />
     <ClInclude Include="GPUEvolver.h" />
     <ClInclude Include="include\nvidia\helper_math.h" />
     <ClInclude Include="SimToDisplay.cuh" />
@@ -169,12 +170,14 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Simulate.cuh" />
+    <ClInclude Include="TetrahedronMesh.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="Evolver.cpp" />
+    <ClCompile Include="ExternalMesh.cpp" />
     <ClCompile Include="GPUEvolver.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -183,6 +186,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="TetrahedronMesh.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -39,6 +39,7 @@ __global__ void initDeviceVariablesKernel(uint numTriangles,
 	d_volumeForce = volumeForce;
 	d_triangleOffset = triangleOffset;
 	d_triangleCountPerVertex = triangleCountPerVertex;
+	d_trianglesByVertex = trianglesByVertex;
 	d_triangles = triangles;
 }
 
@@ -52,7 +53,14 @@ __host__ void initDeviceVariables(uint numTriangles,
 	                              uint3* triangles) {
 	dim3 grid = { 1, 1, 1 };
 	dim3 block = { 1, 1, 1 };
-	initDeviceVariablesKernel<<<grid, block>>>(numTriangles, numVertices, areaForce, volumeForce, triangleOffset, triangleCountPerVertex, trianglesByVertex, triangles);
+	initDeviceVariablesKernel<<<grid, block>>>(numTriangles,
+											   numVertices,
+											   areaForce,
+											   volumeForce,
+											   triangleOffset,
+											   triangleCountPerVertex,
+											   trianglesByVertex,
+											   triangles);
 	h_numTriangles = numTriangles;
 	h_numVertices = numVertices;
 	cudaDeviceSynchronize();
@@ -85,6 +93,8 @@ __global__ void calculateForces(float3* vertices) {
 	if (thisVertex < d_numVertices) {
 		uint offset = d_triangleOffset[thisVertex];
 		uint numTriangles = d_triangleCountPerVertex[thisVertex];
+		float3 areaForce = { 0.0f, 0.0f, 0.0f };
+		float3 volumeForce = { 0.0f, 0.0f, 0.0f };
 		for (uint i = offset; i < offset + numTriangles; i++) {
 			uint2 tri = d_trianglesByVertex[i];
 			float3 x1 = vertices[thisVertex];
@@ -94,9 +104,12 @@ __global__ void calculateForces(float3* vertices) {
 			float3 s1 = x2 - x1;
 			float3 s2 = x3 - x2;
 
-			d_areaForce[thisVertex] += (SIGMA / 2.0f) * cross(s2, cross(s1, s2) / length(cross(s1, s2)));
+			float3 c = cross(s1, s2);
+			d_areaForce[thisVertex] += (SIGMA / 2.0f) * cross(s2, c / length(c));
 			d_volumeForce[thisVertex] += cross(x2, x3) / 6.0f;
 		}
+		d_areaForce[thisVertex] = areaForce;
+		d_volumeForce[thisVertex] = volumeForce;
 	}
 }
 

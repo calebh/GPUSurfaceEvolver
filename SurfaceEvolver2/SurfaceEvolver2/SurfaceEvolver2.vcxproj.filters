@@ -54,6 +54,10 @@
     <ClInclude Include="GPUEvolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ExternalMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TetrahedronMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SimToDisplay.cu">
@@ -84,5 +88,7 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Evolver.cpp" />
     <ClCompile Include="GPUEvolver.cpp" />
+    <ClCompile Include="ExternalMesh.cpp" />
+    <ClCompile Include="TetrahedronMesh.cpp" />
   </ItemGroup>
 </Project>

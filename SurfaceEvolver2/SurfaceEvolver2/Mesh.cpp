@@ -34,6 +34,8 @@ void Mesh::initCudaBuffers() {
 	}
 
 	{
+		// Used to draw outlines
+		// See http://codeflow.org/entries/2012/aug/02/easy-wireframe-display-with-barycentric-coordinates/
 		auto res = allocateGLBuff<float3>(3 * numFaces);
 		barycentricBuff = res.first;
 		resources[2] = res.second;

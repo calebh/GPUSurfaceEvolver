@@ -9,11 +9,12 @@ public:
 	GPUEvolver(Mesh* initMesh, int initItersUntilLambdaUpdate);
 	~GPUEvolver();
 private:
+	void synchronizeToMesh();
 	float stepSimulation(bool saveResults);
-	/*float getArea();
+	float getArea();
 	float getMeanNetForce();
 	float getMeanCurvature();
-	float getVolume();*/
+	float getVolume();
 
 	uint2 rearrangeTri(uint3 tri, int pointIndex);
 

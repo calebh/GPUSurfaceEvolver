@@ -11,7 +11,7 @@
 class CameraNode : public SceneNode
 {
 public:
-	CameraNode(int initialWidth, int initialHeight);
+	CameraNode(Device* device, int initialWidth, int initialHeight);
 	~CameraNode();
 	void updateView();
 	void setFov(float f);
@@ -23,6 +23,7 @@ public:
 	glm::vec3 getLookVector();
 	glm::vec3& getUp();
 private:
+	Device* device;
 	float fov;
 	float near;
 	float far;
