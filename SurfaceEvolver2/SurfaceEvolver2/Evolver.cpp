@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#define TINY_AMOUNT 0.000001f
+#define TINY_AMOUNT      0.000001f
 #define LAMBDA_THRESHOLD      0.001f
 #define MAX_LAMBDA_ITERATIONS 100
 
@@ -10,7 +10,8 @@ Evolver::Evolver(Mesh* initMesh, int initItersUntilLambdaUpdate) :
 	mesh(initMesh),
 	lambda(0.0f),
 	itersUntilLambdaUpdate(initItersUntilLambdaUpdate),
-	updateCount(0)
+	updateCount(0),
+	mutateMesh(false)
 {
 }
 
@@ -24,9 +25,10 @@ void Evolver::findLambda() {
     float temp = 0.0001f;
     do {
         lambda += delta;
-        float a1 = stepSimulation(false);
+        float a1 = stepSimulation();
+        
         lambda += TINY_AMOUNT;
-        float a2 = stepSimulation(false);
+        float a2 = stepSimulation();
         float slope = (a2-a1) / TINY_AMOUNT;
         
         delta = -temp*slope;
@@ -36,9 +38,11 @@ void Evolver::findLambda() {
 }
 
 void Evolver::update() {
-	if (updateCount % itersUntilLambdaUpdate == 0) {
-		findLambda();
-	}
+    if (updateCount % itersUntilLambdaUpdate == 0) {
+        mutateMesh = false
+        findLambda();
+    }
+    mutateMesh = true;
     stepSimulation(true);
     updateCount++;
 }
@@ -66,7 +70,7 @@ void Evolver::outputData(){
             case MEAN_CURVATURE:
                 cout << getMeanCurvature();
                 break;
-            /*case POINTS:
+            case POINTS:
                 outputPoints();
                 break;
             case VOLUME_FORCES:
@@ -77,14 +81,15 @@ void Evolver::outputData(){
                 break;
             case NET_FORCES:
                 outputVolumeForces();
-                break;*/
+                break;
             default:
                 break;
         }
     }
-	if (formatLength > 0) {
-		cout << endl;
-	}
+    if (formatLength > 0) {
+            cout << endl;
+    }
 }
+
     
     
