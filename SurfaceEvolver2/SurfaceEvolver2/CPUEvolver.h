@@ -1,14 +1,18 @@
-#pragma 
+#pragma once
 #include "Evolver.h"
+#include <vector>
+
+#define SIGMA 1
 
 class CPUEvolver :
     public Evolver
 {
+public:
     CPUEvolver(Mesh* m, int initItersUntilLambdaUpdate);
     ~CPUEvolver();
 
 private:
-    void rearrangeTri(uint3 tri, int pointIndex);
+    uint2 rearrangeTri(uint3 tri, int pointIndex);
     
     void stepSimulation();
     
@@ -26,14 +30,14 @@ private:
     
     float calculateAlpha();
     
-    void displaceVertex(vertexIndex);
+    void displaceVertex(int vertexIndex);
     
     
     int vertexCount, triangleCount;
     
-    vector<float3>& points, triangles;
+	std::vector<uint3> triangles;
     int *triangleCountPerVertex, *triangleOffset;
-    uint3 *trianglesByVertex, *triangles;
+    uint2 *trianglesByVertex;
     float3 *points1, *points2, *areaForce, *volumeForce;
     float alpha;
 };

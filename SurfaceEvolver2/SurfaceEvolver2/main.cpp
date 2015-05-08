@@ -7,7 +7,7 @@
 #include "TetrahedronMesh.h"
 #include "GPUEvolver.h"
 
-int main(void) {
+int oldMain(void) {
 	int width = 800;
 	int height = 600;
 	bool fullscreen = false;
@@ -15,9 +15,9 @@ int main(void) {
 	// Device must be the very first thing created!
 	Device device(width, height, fullscreen);
 	
-	//ExternalMesh tetra("models/icosa4.obj");
+	ExternalMesh tetra("models/icosa4.obj");
 	//Mesh jeep(127);
-	TetrahedronMesh tetra(10);
+	//TetrahedronMesh tetra(10);
 	
 	SceneManager manager(&device);
 
@@ -43,8 +43,11 @@ int main(void) {
 	GPUEvolver evolver(&tetra, 20);
 
 	while (device.run()) {
-		evolver.update();
+		for (int i = 0; i < 10; i++) {
+			evolver.update();
+		}
 		manager.drawAll();
 		device.endScene();
 	}
+	return 0;
 }

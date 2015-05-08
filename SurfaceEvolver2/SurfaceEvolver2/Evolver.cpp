@@ -2,13 +2,13 @@
 
 using namespace std;
 
-#define TINY_AMOUNT      0.000001f
+#define TINY_AMOUNT      0.01f
 #define LAMBDA_THRESHOLD      0.001f
 #define MAX_LAMBDA_ITERATIONS 100
 
 Evolver::Evolver(Mesh* initMesh, int initItersUntilLambdaUpdate) :
 	mesh(initMesh),
-	lambda(0.0f),
+	lambda(0.1f),
 	itersUntilLambdaUpdate(initItersUntilLambdaUpdate),
 	updateCount(0),
 	mutateMesh(false)

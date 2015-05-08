@@ -23,6 +23,7 @@ __device__ uint2* d_trianglesByVertex;  // Given some vertex residing at positio
 								        // trianglesByVertex[triangleOffset[i]] to trianglesByVertex[triangleOffset[i]+triangleCountPerVertex-1]
 								        // are the triangles that i is a part of.
 __device__ uint3* d_triangles;
+		   uint h_maxTrianglesPerVertex;
 
 
 
@@ -51,7 +52,8 @@ __host__ void initDeviceVariables(uint numTriangles,
 	                              uint* triangleOffset,
 	                              uint* triangleCountPerVertex,
 	                              uint2* trianglesByVertex,
-	                              uint3* triangles) {
+	                              uint3* triangles,
+								  uint maxTrianglesByVertex) {
 	dim3 grid = { 1, 1, 1 };
 	dim3 block = { 1, 1, 1 };
 	initDeviceVariablesKernel<<<grid, block>>>(numTriangles,
@@ -63,6 +65,7 @@ __host__ void initDeviceVariables(uint numTriangles,
 											   trianglesByVertex,
 											   triangles);
 	h_numTriangles = numTriangles;
+	h_maxTrianglesPerVertex = maxTrianglesByVertex;
 	h_numVertices = numVertices;
 	cudaDeviceSynchronize();
 }
@@ -88,7 +91,7 @@ __device__ void atomicAddVecComponents(float3* destination, float3 toAdd) {
 }
 
 // For now we assume that there is one block per vertex which has only one thread
-__global__ void calculateForces(float3* vertices) {
+/*__global__ void calculateForces(float3* vertices) {
 	int thisVertex = blockIdx.x + blockIdx.y * gridDim.x + blockIdx.z * (gridDim.x * gridDim.y);
 	//int threadIndex = threadIdx.x + threadIdx.y * blockDim.x + threadIdx.z * (blockDim.x * blockDim.y);
 	if (thisVertex < d_numVertices) {
@@ -113,9 +116,9 @@ __global__ void calculateForces(float3* vertices) {
 		d_areaForce[thisVertex] = areaForce;
 		d_volumeForce[thisVertex] = volumeForce;
 	}
-}
+}*/
 
-/*__global__ void calculateForces(float3* vertices) {
+__global__ void calculateForces(float3* vertices) {
 	__shared__ float3 areaForce;
 	__shared__ float3 volumeForce;
 
@@ -144,14 +147,18 @@ __global__ void calculateForces(float3* vertices) {
 
 			float3 c = cross(s1, s2);
 			atomicAddVecComponents(&areaForce, (SIGMA / 2.0f) * cross(s2, c / length(c)));
-
-			volumeForce += cross(x2, x3) / 6.0f;
+			atomicAddVecComponents(&volumeForce, cross(x2, x3) / 6.0f);
+			//volumeForce += cross(x2, x3) / 6.0f;
 		}
 	}
 
-	d_areaForce[thisVertex] = areaForce;
-	d_volumeForce[thisVertex] = volumeForce;
-}*/
+	__syncthreads();
+
+	if (thisTriangle == 0) {
+		d_areaForce[thisVertex] = areaForce;
+		d_volumeForce[thisVertex] = volumeForce;
+	}
+}
 
 __global__ void displaceVertices(float lambda,
 					  float3* points1,
@@ -198,14 +205,13 @@ __global__ void calculateAlphaKernel() {
 // Synchronize between kernel calls!!!
 __host__ float stepCudaSimulation(float lambda,
 						    float3* sourceVertices,
-							float3* destinationVertices
-							  /*int maxTrianglesPerVertex*/) {
+							float3* destinationVertices) {
 	cleanDeviceVariables();
 
 	// 1. Calculate forces
 	{
 		dim3 grid = { h_numVertices, 1, 1 };
-		dim3 block = { 1, 1, 1 };
+		dim3 block = { h_maxTrianglesPerVertex, 1, 1 };
 		calculateForces<<<grid, block>>>(sourceVertices);
 	}
 

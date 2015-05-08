@@ -2,13 +2,19 @@
 
 #define TWO_PI 6.28318530718
 
+using namespace std;
+
 CPUEvolver::CPUEvolver(Mesh* m, int initItersUntilLambdaUpdate)
     : Evolver(m, initItersUntilLambdaUpdate)
 {
     
-    triangles = m->getTriangels();
-    points1 = m->getVertices();
-    vertexCount = vertex.size();
+    triangles = m->getTriangles();
+    vector<float3>& points = m->getVertices();
+	points1 = new float3[points.size()];
+	for (int i = 0; i < points.size(); i++)
+		points1[i] = points[i];
+
+    vertexCount = points.size();
     triangleCount = triangles.size();
     
     points2 = new float3[vertexCount];
@@ -29,7 +35,7 @@ CPUEvolver::CPUEvolver(Mesh* m, int initItersUntilLambdaUpdate)
                 triCount++;
             }
         }
-        m->triangleCountPerVertex[i] = triCount;
+        triangleCountPerVertex[i] = triCount;
         offset += triCount;
     }
 }
@@ -40,10 +46,9 @@ CPUEvolver::~CPUEvolver(){
     delete[] points2;
     delete[] areaForce;
     delete[] volumeForce;
-    delete[] areas;
 }
 
-uint3 CPUEvolver::rearrangeTri(uint3 tri, int pointIndex){
+uint2 CPUEvolver::rearrangeTri(uint3 tri, int pointIndex){
     uint2 simpleTri;
     if(tri.x == pointIndex){
         simpleTri.x = tri.y;
@@ -55,15 +60,15 @@ uint3 CPUEvolver::rearrangeTri(uint3 tri, int pointIndex){
         simpleTri.x = tri.x;
         simpleTri.y = tri.y;
     }
-    return tri;
+    return simpleTri;
 }
 
 
 
 void CPUEvolver::stepSimulation(){
-    for(int i=0; i < m->vertexCount; i++){
-        areaForce[i] = vector(0,0,0);
-        volumeForce[i] = vector(0,0,0);
+    for(int i=0; i < vertexCount; i++){
+        areaForce[i] = make_float3(0,0,0);
+		volumeForce[i] = make_float3(0, 0, 0);
         for(int j=0, k = triangleCountPerVertex[i]; j < k; j++){
             calculateForces(i,j);
         }
@@ -71,14 +76,14 @@ void CPUEvolver::stepSimulation(){
     }
     float alpha = calculateAlpha();
     for(int i=0; i < vertexCount; i++){
-        displaceVertices(i);
+        displaceVertex(i);
     }
     getArea();
 }
 
-void CPUEvolver::calculateForces(int vertexIndex, int triangleOffset){
+void CPUEvolver::calculateForces(int vertexIndex, int triangleIndex){
     int triangleIndexOffset = triangleOffset[vertexIndex];
-    uint3 tri = trianglesByVertex[triangleIndexOffset + triangleIndex];
+    uint2 tri = trianglesByVertex[triangleIndexOffset + triangleIndex];
     
     float3 x1 = points1[vertexIndex];
     float3 x2 = points1[tri.x];
@@ -100,7 +105,7 @@ float CPUEvolver::calculateAlpha(){
     return sum1 / sum2;
 }
 
-void CPUEvolver::displaceVertex(vertexIndex){
+void CPUEvolver::displaceVertex(int vertexIndex){
     if(mutateMesh)
         points1[vertexIndex] = points1[vertexIndex] + lambda*(areaForce[vertexIndex] - alpha*volumeForce[vertexIndex]);
     else
@@ -131,16 +136,16 @@ float CPUEvolver::getMeanNetForce(){
 // approximates mean curvature by using angular difference
 float CPUEvolver::getMeanCurvature(){
     float3* outPoints = (mutateMesh) ? points1 : points2;
-
+	float totalCurvature = 0;
     for(int i=0; i < vertexCount; i++){
-        int triangleOffset = triangleOffset[i];
+        int triangleIndex = triangleOffset[i];
         float totalAngle = 0,
               totalArea  = 0;
         for(int j=0; j < triangleCountPerVertex[i]; j++){
-            uint2 tri = trianglesByVertex[triangleOffset + j];
+            uint2 tri = trianglesByVertex[triangleIndex + j];
             float3 u = outPoints[tri.x] - outPoints[i],
                    v = outPoints[tri.y] - outPoints[i];
-            totalAngle += acos(dot(u, v) / sqrt(dot(u, u) * dot(v, v));
+            totalAngle += acos(dot(u, v) / sqrt(dot(u, u) * dot(v, v)));
             totalArea  += length(cross(u, v))/2;
         }
         totalCurvature += (TWO_PI - totalAngle) / totalArea;
@@ -161,7 +166,6 @@ float CPUEvolver::getVolume(){
 void CPUEvolver::outputPoints(){
     float3* outPoints = (mutateMesh) ? points1 : points2;
     
-    if(mutateMesh){
     for(int i=0; i<vertexCount; i++){
         if(i>0)
             cout << ", ";

@@ -13,7 +13,8 @@ __host__ void initDeviceVariables(uint numTriangles,
 	uint* triangleOffset,
 	uint* triangleCountPerVertex,
 	uint2* trianglesByVertex,
-	uint3* triangles);
+	uint3* triangles,
+	uint maxTrianglesByVertex);
 
 __host__ float stepCudaSimulation(float lambda,
 	float3* sourceVertices,

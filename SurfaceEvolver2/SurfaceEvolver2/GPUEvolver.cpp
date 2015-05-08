@@ -41,6 +41,7 @@ GPUEvolver::GPUEvolver(Mesh* initMesh, int initItersUntilLambdaUpdate)
 	auto trianglesByVertex = new uint2[numTriangles * 3];
 	auto triangleCountPerVertex = new uint[numVertices];
 	uint offset = 0;
+	uint maxTriangleCount = 0;
 	for (uint i = 0; i < numVertices; i++){
 		uint triCount = 0;
 		triangleOffset[i] = offset;
@@ -49,6 +50,9 @@ GPUEvolver::GPUEvolver(Mesh* initMesh, int initItersUntilLambdaUpdate)
 				trianglesByVertex[offset + triCount] = rearrangeTri(triangles[j], i);
 				triCount++;
 			}
+		}
+		if (triCount > maxTriangleCount) {
+			maxTriangleCount = triCount;
 		}
 		triangleCountPerVertex[i] = triCount;
 		offset += triCount;
@@ -69,7 +73,8 @@ GPUEvolver::GPUEvolver(Mesh* initMesh, int initItersUntilLambdaUpdate)
 						cudaTriangleOffset,
 						cudaTriangleCountPerVertex,
 						cudaTrianglesByVertex,
-						cudaTriangles);
+						cudaTriangles,
+						maxTriangleCount);
 }
 
 GPUEvolver::~GPUEvolver()
@@ -111,7 +116,6 @@ void GPUEvolver::stepSimulation() {
 		float3* temp = cudaVertices;
 		cudaVertices = cudaVertices2;
 		cudaVertices2 = temp;
-		synchronizeToMesh();
 	}
 }
 

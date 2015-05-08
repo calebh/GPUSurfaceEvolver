@@ -8,6 +8,8 @@
 #include "GPUEvolver.h"
 #include "CPUEvolver.h"
 
+#include <ctime>
+
 enum MeshType { TETRAHEDRON, ICOSAHEDRON,
                 MESH_FILE };
 
@@ -31,6 +33,13 @@ char lastChar(const char* s){
 
 int main(int argc, char** argv){
     
+	int width = 800;
+	int height = 600;
+	bool fullscreen = false;
+
+	// Device must be the very first thing created!
+	Device device(width, height, fullscreen);
+
     //Default parameters
     
     MeshType meshType = TETRAHEDRON;
@@ -55,14 +64,16 @@ int main(int argc, char** argv){
     OutputType output[8];
     int outputLength = 0;
     
-    Mesh* m;
-    
+	int scale = 5;
+
+	bool timing = false;
+
     // Parse Command Line Arguments:
     for(int i=1;i<argc;i++){
         if(argMatch(argv[i], "-v")){
             visualization = true;
         }else if(argMatch(argv[i], "-n=")){
-            bisections = atoi(argv[i]+3);
+            idealTriangleCount = atoi(argv[i]+3);
         }else if(argMatch(argv[i], "-i=")){
             iterations = atoi(argv[i]+3);
         }else if(argMatch(argv[i], "-iterations=")){
@@ -85,7 +96,14 @@ int main(int argc, char** argv){
             }
         }else if(argMatch(argv[i], "-cpu")){
             gpu = false;
-        }else if(argMatch(argv[i], "-o")){
+		}
+		else if (argMatch(argv[i], "-s=")){
+			scale = atoi(argv[i] + 3);
+		}
+		else if (argMatch(argv[i], "-t")){
+			timing = true;
+		}
+		else if (argMatch(argv[i], "-o")){
             do{
                 i++;
                 if(argMatch(argv[i], "SurfaceArea")){
@@ -109,11 +127,11 @@ int main(int argc, char** argv){
         }
     }
     
-    Mesh* m;
+    Mesh* mesh;
     
     switch(meshType){
         case TETRAHEDRON:
-            m = new TetrahedronMesh(ceil(sqrt(idealTriangleCount/4.0)));
+            mesh = new TetrahedronMesh(ceil(sqrt(idealTriangleCount/4.0)));
             break;
         case ICOSAHEDRON:
             if(idealTriangleCount <= 100){
@@ -127,31 +145,27 @@ int main(int argc, char** argv){
             }else{
                 meshFile = "models/icosa5.obj";
             }
-            m = new ExternalMesh(meshFile);
+            mesh = new ExternalMesh(meshFile);
             break;
         default:
-            m = new ExternalMesh(meshFile);
+            mesh = new ExternalMesh(meshFile);
             break;
     }
     
     // visualization only applies to GPU calculation, so:
     if(visualization){
-        int width = 800;
-        int height = 600;
-        bool fullscreen = false;
-
-        // Device must be the very first thing created!
-        Device device(width, height, fullscreen);
+        
     
+		SceneManager manager(&device);
         CameraNode camera(&device, width, height);
         camera.getTransform().setTranslation(20.0f, 20.0f, 20.0f);
         manager.addNode(&camera);
 
         ModelNode mn;
         //mn.getTransform().setScale(0.025f, 0.025f, 0.025f);
-        mn.getTransform().setScale(20.0f, 20.0f, 20.0f);
+        mn.getTransform().setScale(scale, scale, scale);
         mn.getTransform().setTranslation(0.0f, 0.0f, 0.0f);
-        mn.setMesh(&tetra);
+        mn.setMesh(mesh);
         manager.addNode(&mn);
 
         ShaderProgram geometryProgram;
@@ -162,35 +176,46 @@ int main(int argc, char** argv){
         geometryProgram.link();
         manager.setGeometryProgram(&geometryProgram);
 
-        GPUEvolver evolver(m, 10);
+        GPUEvolver evolver(mesh, 10);
 
         while (device.run()) {
-            for(int i =0; i < 10; i++) {
-                evolver.update();
-            }
+            evolver.update();
+			evolver.synchronizeToMesh();
             manager.drawAll();
             device.endScene();
         }
     }else{
         if(gpu){
-            GPUEvolver evolver(m, 10);
+            GPUEvolver evolver(mesh, 10);
             evolver.setOutputFormat(output, outputLength);
+			std::clock_t    start;
+
+			start = std::clock();
+			// your test
+			
             for(int i=0; i < iterations; i++){
                 evolver.update();
                 evolver.outputData();
             }
+			if (timing){
+				std::cout << "Time: " << (std::clock() - start) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
+			}
         }else{
-            CPUEvolver evolver(m, 10);
+            CPUEvolver evolver(mesh, 10);
             evolver.setOutputFormat(output, outputLength);
+			std::clock_t    start;
+
+			start = std::clock();
             for(int i=0; i < iterations; i++){
                 evolver.update();
                 evolver.outputData();
             }
+			if (timing){
+				std::cout << "Time: " << (std::clock() - start) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
+			}
         }
     }
-}
-            
-            
+	return 0;
 }
     
     

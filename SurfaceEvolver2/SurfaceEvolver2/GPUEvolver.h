@@ -8,8 +8,8 @@ class GPUEvolver :
 public:
 	GPUEvolver(Mesh* initMesh, int initItersUntilLambdaUpdate);
 	~GPUEvolver();
-private:
 	void synchronizeToMesh();
+private:
 	void stepSimulation();
 	float getArea();
 	float getMeanNetForce();
