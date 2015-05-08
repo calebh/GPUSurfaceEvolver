@@ -21,7 +21,7 @@ protected:
 	// Step simulation returns the area
 	// If saveResult is true then the evolver should override the current mesh state
 	// with the new one
-	virtual float stepSimulation() = 0;
+	virtual void stepSimulation() = 0;
 	virtual float getArea() = 0;
 	virtual float getMeanNetForce() = 0;
 	virtual float getMeanCurvature() = 0;
