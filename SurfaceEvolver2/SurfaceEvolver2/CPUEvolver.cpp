@@ -140,7 +140,7 @@ float CPUEvolver::getMeanCurvature(){
             uint2 tri = trianglesByVertex[triangleOffset + j];
             float3 u = outPoints[tri.x] - outPoints[i],
                    v = outPoints[tri.y] - outPoints[i];
-            totalAngle += acos(dot(u, v) / sqrt(dot(u, u) + dot(v, v));
+            totalAngle += acos(dot(u, v) / sqrt(dot(u, u) * dot(v, v));
             totalArea  += length(cross(u, v))/2;
         }
         totalCurvature += (TWO_PI - totalAngle) / totalArea;
