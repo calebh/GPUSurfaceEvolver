@@ -105,7 +105,7 @@ void GPUEvolver::synchronizeToMesh() {
 }
 
 void GPUEvolver::stepSimulation() {
-	stepCudaSimulation(lambda, cudaVertices, cudaVertices2);
+	float res = stepCudaSimulation(lambda, cudaVertices, cudaVertices2);
 	
 	if (mutateMesh) {
 		float3* temp = cudaVertices;

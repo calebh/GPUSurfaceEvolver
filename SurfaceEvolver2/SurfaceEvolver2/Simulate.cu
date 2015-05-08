@@ -3,7 +3,7 @@
 #define TINY_AMOUNT           0.000001
 #define TEMP                  0.0001
 #define UPDATE_ITERATIONS     20
-#define SIGMA                 5.0f
+#define SIGMA                 1.0f
 
 // REMEMBER TO INITIALIZE THESE
 __device__ float d_sum1;
@@ -180,8 +180,8 @@ __host__ float calculateArea(float3* vertices) {
 	dim3 block = { 1, 1, 1 };
 	calculateAreaKernel<<<grid, block>>>(vertices);
 	cudaDeviceSynchronize();
-	float area;
-	cudaMemcpyFromSymbol(&area, "d_area", sizeof(area), 0, cudaMemcpyDeviceToHost);
+	float area = d_area;
+	cudaMemcpyFromSymbol(&area, d_area, sizeof(area), 0, cudaMemcpyDeviceToHost);
 	return area;
 }
 
@@ -196,7 +196,7 @@ __global__ void calculateAlphaKernel() {
 }
 
 // Synchronize between kernel calls!!!
-__host__ void stepCudaSimulation(float lambda,
+__host__ float stepCudaSimulation(float lambda,
 						    float3* sourceVertices,
 							float3* destinationVertices
 							  /*int maxTrianglesPerVertex*/) {
@@ -231,5 +231,5 @@ __host__ void stepCudaSimulation(float lambda,
 	cudaDeviceSynchronize();
 
 	// 4. Calculate the new area and return
-	//return calculateArea(destinationVertices);
+	return calculateArea(destinationVertices);
 }
