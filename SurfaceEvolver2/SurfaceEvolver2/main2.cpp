@@ -43,7 +43,7 @@ int main(int argc, char** argv){
     
     // Number of times the shape is bisected (any number for tetrahedra, preset numbers for
     // icosahedra, and it means nothing for other meshes)
-    int objectiveTriangleCount = 400;
+    int idealTriangleCount = 400;
     
     // Times Update is called if running in non visual mode
     int iterations = 10;
@@ -113,16 +113,16 @@ int main(int argc, char** argv){
     
     switch(meshType){
         case TETRAHEDRON:
-            m = new TetrahedronMesh(ceil(sqrt(objectiveTriangleCount/4.0)));
+            m = new TetrahedronMesh(ceil(sqrt(idealTriangleCount/4.0)));
             break;
         case ICOSAHEDRON:
-            if(objectiveTriangleCount <= 100){
+            if(idealTriangleCount <= 100){
                 meshFile = "models/icosa1.obj";
-            }else if(objectiveTriangleCount <= 1000){
+            }else if(idealTriangleCount <= 1000){
                 meshFile = "models/icosa2.obj";
-            }else if(objectiveTriangleCount <= 10000){
+            }else if(idealTriangleCount <= 10000){
                 meshFile = "models/icosa3.obj";
-            }else if(objectiveTriangleCount <= 100000){
+            }else if(idealTriangleCount <= 100000){
                 meshFile = "models/icosa4.obj";
             }else{
                 meshFile = "models/icosa5.obj";
@@ -165,9 +165,11 @@ int main(int argc, char** argv){
         GPUEvolver evolver(m, 10);
 
         while (device.run()) {
+            for(int i =0; i < 10; i++) {
                 evolver.update();
-                manager.drawAll();
-                device.endScene();
+            }
+            manager.drawAll();
+            device.endScene();
         }
     }else{
         if(gpu){
