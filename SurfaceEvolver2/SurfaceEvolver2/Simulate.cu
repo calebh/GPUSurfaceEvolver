@@ -3,7 +3,7 @@
 #define TINY_AMOUNT           0.000001
 #define TEMP                  0.0001
 #define UPDATE_ITERATIONS     20
-#define SIGMA                 1
+#define SIGMA                 5.0f
 
 // REMEMBER TO INITIALIZE THESE
 __device__ float d_sum1;
@@ -23,6 +23,7 @@ __device__ uint2* d_trianglesByVertex;  // Given some vertex residing at positio
 								        // trianglesByVertex[triangleOffset[i]] to trianglesByVertex[triangleOffset[i]+triangleCountPerVertex-1]
 								        // are the triangles that i is a part of.
 __device__ uint3* d_triangles;
+
 
 
 __global__ void initDeviceVariablesKernel(uint numTriangles,
@@ -105,13 +106,52 @@ __global__ void calculateForces(float3* vertices) {
 			float3 s2 = x3 - x2;
 
 			float3 c = cross(s1, s2);
-			d_areaForce[thisVertex] += (SIGMA / 2.0f) * cross(s2, c / length(c));
-			d_volumeForce[thisVertex] += cross(x2, x3) / 6.0f;
+			float3 a = (SIGMA / 2.0f) * cross(s2, c / length(c));
+			areaForce += a;
+			volumeForce += cross(x2, x3) / 6.0f;
 		}
 		d_areaForce[thisVertex] = areaForce;
 		d_volumeForce[thisVertex] = volumeForce;
 	}
 }
+
+/*__global__ void calculateForces(float3* vertices) {
+	__shared__ float3 areaForce;
+	__shared__ float3 volumeForce;
+
+	uint thisVertex = blockIdx.x + blockIdx.y * gridDim.x + blockIdx.z * (gridDim.x * gridDim.y);
+	uint thisTriangle = threadIdx.x + threadIdx.y * blockDim.x + threadIdx.z * (blockDim.x * blockDim.y);
+
+	if (thisTriangle == 0) {
+		areaForce = { 0.0f, 0.0f, 0.0f };
+		volumeForce = { 0.0f, 0.0f, 0.0f };
+	}
+
+	__syncthreads();
+
+	if (thisVertex < d_numVertices) {
+		uint numTriangles = d_triangleCountPerVertex[thisVertex];
+		if (thisTriangle < numTriangles) {
+			uint offset = d_triangleOffset[thisVertex];
+			uint i = offset + thisTriangle;
+			uint2 tri = d_trianglesByVertex[i];
+			float3 x1 = vertices[thisVertex];
+			float3 x2 = vertices[tri.x];
+			float3 x3 = vertices[tri.y];
+
+			float3 s1 = x2 - x1;
+			float3 s2 = x3 - x2;
+
+			float3 c = cross(s1, s2);
+			atomicAddVecComponents(&areaForce, (SIGMA / 2.0f) * cross(s2, c / length(c)));
+
+			volumeForce += cross(x2, x3) / 6.0f;
+		}
+	}
+
+	d_areaForce[thisVertex] = areaForce;
+	d_volumeForce[thisVertex] = volumeForce;
+}*/
 
 __global__ void displaceVertices(float lambda,
 					  float3* points1,
@@ -156,9 +196,9 @@ __global__ void calculateAlphaKernel() {
 }
 
 // Synchronize between kernel calls!!!
-__host__ float stepCudaSimulation(float lambda,
-	                          float3* sourceVertices,
-							  float3* destinationVertices
+__host__ void stepCudaSimulation(float lambda,
+						    float3* sourceVertices,
+							float3* destinationVertices
 							  /*int maxTrianglesPerVertex*/) {
 	cleanDeviceVariables();
 
@@ -191,5 +231,5 @@ __host__ float stepCudaSimulation(float lambda,
 	cudaDeviceSynchronize();
 
 	// 4. Calculate the new area and return
-	return calculateArea(destinationVertices);
+	//return calculateArea(destinationVertices);
 }

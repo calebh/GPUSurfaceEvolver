@@ -15,7 +15,7 @@ int main(void) {
 	// Device must be the very first thing created!
 	Device device(width, height, fullscreen);
 	
-	//ExternalMesh jeep("models/dragon.ply");
+	//ExternalMesh tetra("models/icosa4.obj");
 	//Mesh jeep(127);
 	TetrahedronMesh tetra(10);
 	
@@ -27,7 +27,7 @@ int main(void) {
 
 	ModelNode mn;
 	//mn.getTransform().setScale(0.025f, 0.025f, 0.025f);
-	mn.getTransform().setScale(20.0f, 20.0f, 20.0f);
+	//mn.getTransform().setScale(20.0f, 20.0f, 20.0f);
 	mn.getTransform().setTranslation(0.0f, 0.0f, 0.0f);
 	mn.setMesh(&tetra);
 	manager.addNode(&mn);
@@ -43,7 +43,9 @@ int main(void) {
 	GPUEvolver evolver(&tetra, 20);
 
 	while (device.run()) {
-		evolver.update();
+		for (int i = 0; i < 10; i++) {
+			evolver.update();
+		}
 		manager.drawAll();
 		device.endScene();
 	}

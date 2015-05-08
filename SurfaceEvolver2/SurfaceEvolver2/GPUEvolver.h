@@ -10,11 +10,16 @@ public:
 	~GPUEvolver();
 private:
 	void synchronizeToMesh();
-	float stepSimulation(bool saveResults);
+	void stepSimulation();
 	float getArea();
 	float getMeanNetForce();
 	float getMeanCurvature();
 	float getVolume();
+
+	virtual void outputPoints();
+	virtual void outputVolumeForces();
+	virtual void outputAreaForces();
+	virtual void outputNetForces();
 
 	uint2 rearrangeTri(uint3 tri, int pointIndex);
 

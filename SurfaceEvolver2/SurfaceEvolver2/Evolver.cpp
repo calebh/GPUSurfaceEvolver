@@ -44,11 +44,11 @@ void Evolver::findLambda() {
 
 void Evolver::update() {
     if (updateCount % itersUntilLambdaUpdate == 0) {
-        mutateMesh = false
+		mutateMesh = false;
         findLambda();
     }
     mutateMesh = true;
-    stepSimulation(true);
+    stepSimulation();
     updateCount++;
 }
 

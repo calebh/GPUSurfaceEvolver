@@ -86,9 +86,9 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="Evolver.cpp" />
     <ClCompile Include="GPUEvolver.cpp" />
     <ClCompile Include="ExternalMesh.cpp" />
     <ClCompile Include="TetrahedronMesh.cpp" />
+    <ClCompile Include="Evolver.cpp" />
   </ItemGroup>
 </Project>

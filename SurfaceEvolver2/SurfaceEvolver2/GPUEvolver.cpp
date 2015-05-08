@@ -91,8 +91,8 @@ uint2 GPUEvolver::rearrangeTri(uint3 tri, int pointIndex) {
 		ret.x = tri.y;
 		ret.y = tri.z;
 	} else if (tri.y == pointIndex) {
-		ret.y = tri.y;
-		ret.x = tri.x;
+		ret.y = tri.x;
+		ret.x = tri.z;
 	} else {
 		ret.x = tri.x;
 		ret.y = tri.y;
@@ -104,27 +104,36 @@ void GPUEvolver::synchronizeToMesh() {
 	mesh->updateDisplayBuffers(cudaVertices, cudaTriangles);
 }
 
-float GPUEvolver::stepSimulation(bool saveResults) {
-	float3* destinationVertices;
-	if (saveResults) {
-		destinationVertices = cudaVertices;
-	} else {
-		destinationVertices = cudaVertices2;
-	}
-
-	float area = stepCudaSimulation(lambda, cudaVertices, destinationVertices);
+void GPUEvolver::stepSimulation() {
+	stepCudaSimulation(lambda, cudaVertices, cudaVertices2);
 	
-	if (saveResults) {
+	if (mutateMesh) {
 		float3* temp = cudaVertices;
 		cudaVertices = cudaVertices2;
 		cudaVertices2 = temp;
 		synchronizeToMesh();
 	}
-
-	return area;
 }
 
-float GPUEvolver::getArea() { return -1337.0f; }
+float GPUEvolver::getArea() {
+	float3* vertices;
+
+	// If mutateMesh is true then we want to calculate the results stored
+	// in cudaVertices
+	if (mutateMesh) {
+		vertices = cudaVertices;
+	} else {
+		vertices = cudaVertices2;
+	}
+
+	return calculateArea(vertices);
+}
+
 float GPUEvolver::getMeanNetForce() { return -1337.0f; }
 float GPUEvolver::getMeanCurvature() { return -1337.0f; }
 float GPUEvolver::getVolume() { return -1337.0f; }
+
+void GPUEvolver::outputPoints() {}
+void GPUEvolver::outputVolumeForces() {}
+void GPUEvolver::outputAreaForces() {}
+void GPUEvolver::outputNetForces() {}

@@ -15,7 +15,9 @@ __host__ void initDeviceVariables(uint numTriangles,
 	uint2* trianglesByVertex,
 	uint3* triangles);
 
-__host__ float stepCudaSimulation(float lambda,
+__host__ void stepCudaSimulation(float lambda,
 	float3* sourceVertices,
 	float3* destinationVertices
 	/*int maxTrianglesPerVertex*/);
+
+__host__ float calculateArea(float3* vertices);
