@@ -171,7 +171,8 @@ __global__ void displaceVertices(float lambda,
 }
 
 __global__ void calculateAreaKernel(float3* vertices) {
-	int thisTriangle = blockIdx.x + blockIdx.y * blockDim.x + blockIdx.z * (blockDim.x * blockDim.y);
+	//int thisTriangle = blockIdx.x + blockIdx.y * blockDim.x + blockIdx.z * (blockDim.x * blockDim.y);
+	int thisTriangle = blockIdx.x + blockIdx.y * gridDim.x + blockIdx.z * (gridDim.x * gridDim.y);
 	if (thisTriangle < d_numTriangles) {
 		uint3 t = d_triangles[thisTriangle];
 		float3 s1 = vertices[t.y] - vertices[t.x];
@@ -192,14 +193,15 @@ __host__ float calculateArea(float3* vertices) {
 	return area;
 }
 
-__global__ void calculateAlphaKernel() {
-	float sum1 = 0.0f;
-	float sum2 = 0.0f;
-	for (int i = 0; i < d_numVertices; i++){
-		sum1 += dot(d_volumeForce[i], d_areaForce[i]);
-		sum2 += dot(d_volumeForce[i], d_volumeForce[i]);
-	}
-	d_alpha = sum1 / sum2;
+__global__ void calculateAlphaKernelSum() {
+	int thisVertex = blockIdx.x + blockIdx.y * gridDim.x + blockIdx.z * (gridDim.x * gridDim.y);
+	float3 vf = d_volumeForce[thisVertex];
+	atomicAdd(&d_sum1, dot(vf, d_areaForce[thisVertex]));
+	atomicAdd(&d_sum2, dot(vf, vf));
+}
+
+__global__ void calculateAlphaKernelDivide() {
+	d_alpha = d_sum1 / d_sum2;
 }
 
 // Synchronize between kernel calls!!!
@@ -208,28 +210,38 @@ __host__ float stepCudaSimulation(float lambda,
 							float3* destinationVertices) {
 	cleanDeviceVariables();
 
+	int gridX;
+	cudaDeviceGetAttribute(&gridX, cudaDevAttrMaxGridDimX, 0);
+	uint verticesYGrid = (h_numVertices / gridX) + 1;
+
 	// 1. Calculate forces
 	{
-		dim3 grid = { h_numVertices, 1, 1 };
+		dim3 grid = { h_numVertices, verticesYGrid, 1 };
 		dim3 block = { h_maxTrianglesPerVertex, 1, 1 };
 		calculateForces<<<grid, block>>>(sourceVertices);
 	}
 
 	cudaDeviceSynchronize();
 
-	// 2. Calculate alpha
+	// 2. Calculate alpha sum
 	{
-		//dim3 grid = { h_numVertices, 1, 1 };
+		dim3 grid = { h_numVertices, verticesYGrid, 1 };
+		dim3 block = { 1, 1, 1 };
+		calculateAlphaKernelSum<<<grid, block>>>();
+	}
+
+	// 2.5 Calculate alpha division
+	{
 		dim3 grid = { 1, 1, 1 };
 		dim3 block = { 1, 1, 1 };
-		calculateAlphaKernel<<<grid, block>>>();
+		calculateAlphaKernelDivide<<<grid, block>>>();
 	}
 
 	cudaDeviceSynchronize();
 
 	// 3. Displace the vertices
 	{
-		dim3 grid = { h_numVertices, 1, 1 };
+		dim3 grid = { h_numVertices, verticesYGrid, 1 };
 		dim3 block = { 1, 1, 1 };
 		displaceVertices<<<grid, block>>>(lambda, sourceVertices, destinationVertices);
 	}

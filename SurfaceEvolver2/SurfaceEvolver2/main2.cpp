@@ -184,8 +184,8 @@ int main(int argc, char** argv){
             manager.drawAll();
             device.endScene();
         }
-    }else{
-        if(gpu){
+    } else {
+        if (gpu) {
             GPUEvolver evolver(mesh, 10);
             evolver.setOutputFormat(output, outputLength);
 			std::clock_t    start;
@@ -200,7 +200,7 @@ int main(int argc, char** argv){
 			if (timing){
 				std::cout << "Time: " << (std::clock() - start) / (double)(CLOCKS_PER_SEC / 1000) << " ms" << std::endl;
 			}
-        }else{
+        } else {
             CPUEvolver evolver(mesh, 10);
             evolver.setOutputFormat(output, outputLength);
 			std::clock_t    start;
