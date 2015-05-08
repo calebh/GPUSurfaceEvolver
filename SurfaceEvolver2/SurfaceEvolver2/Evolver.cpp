@@ -25,10 +25,15 @@ void Evolver::findLambda() {
     float temp = 0.0001f;
     do {
         lambda += delta;
-        float a1 = stepSimulation();
+        stepSimulation();
+        float a1 = getArea();
         
         lambda += TINY_AMOUNT;
-        float a2 = stepSimulation();
+        stepSimulation();
+        float a2 = getArea();
+        
+        lambda -= TINY_AMOUNT;
+        
         float slope = (a2-a1) / TINY_AMOUNT;
         
         delta = -temp*slope;
