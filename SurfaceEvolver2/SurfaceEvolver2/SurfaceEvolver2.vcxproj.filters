@@ -79,7 +79,6 @@
   <ItemGroup>
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="Device.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModelNode.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -92,6 +91,7 @@
     <ClCompile Include="TetrahedronMesh.cpp" />
     <ClCompile Include="Evolver.cpp" />
     <ClCompile Include="CPUEvolver.cpp" />
-    <ClCompile Include="main2.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="oldMain.cpp" />
   </ItemGroup>
 </Project>

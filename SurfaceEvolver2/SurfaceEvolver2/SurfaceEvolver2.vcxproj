@@ -182,9 +182,9 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClCompile Include="ExternalMesh.cpp" />
     <ClCompile Include="GPUEvolver.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="main2.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ModelNode.cpp" />
+    <ClCompile Include="oldMain.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />

@@ -40,7 +40,7 @@ char lastChar(const char* s){
 }
 
 void help(){
-    cout << 
+    std::cout << 
 "\n"
 "    SurfaceEvolver2\n"
 "\n"
