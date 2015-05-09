@@ -1,11 +1,23 @@
+/*
+ * Evolver.cpp
+ * 
+ * A certain amount of the evolver must be performed on the CPU; this file
+ * does those bits,includeing: initializing values in the constructor, 
+ * finding a new lambda and updating, and outputting data (these all use calls
+ * to other functions to be implementedin CPUEvolver or GPUEvolver).
+ */
+
 #include "Evolver.h"
 
 using namespace std;
 
+// Some constants that can be fiddled with
 #define TINY_AMOUNT      0.01f
 #define LAMBDA_THRESHOLD      0.001f
 #define MAX_LAMBDA_ITERATIONS 100
 
+
+// Initializa Data:
 Evolver::Evolver(Mesh* initMesh, int initItersUntilLambdaUpdate) :
 	mesh(initMesh),
 	lambda(0.1f),
@@ -19,6 +31,16 @@ Evolver::~Evolver()
 {
 }
 
+
+/* 
+ * Find lambda by doing a gradient-descent like algorithm.
+ * The basic algorithm is to start with a lambda value and find
+ * the approximate slope of the relationship between lambda
+ * and surface area of an evolved mesh. Then, change lambda
+ * according to that slope and the amount of iterations that 
+ * have passed; eventually this should lead to a reasonably good 
+ * lambda for minimizing the surface area.
+ */
 void Evolver::findLambda() {
     float delta = 0;
     int i=0;
@@ -42,9 +64,14 @@ void Evolver::findLambda() {
     } while(abs(delta) > LAMBDA_THRESHOLD && i < MAX_LAMBDA_ITERATIONS);
 }
 
+// The update function is relaticely straight forward:
+// if a certain amount of iterations have passed, find a new 
+// lambda, and always just step the simulation.
+// Mutate mesh is worth paying attention to, as it dictates whether
+// or not a call to stepSimulation() will overwrite the original point data
 void Evolver::update() {
     if (updateCount % itersUntilLambdaUpdate == 0) {
-		mutateMesh = false;
+        mutateMesh = false;
         findLambda();
     }
     mutateMesh = true;
@@ -52,9 +79,12 @@ void Evolver::update() {
     updateCount++;
 }
 
+// When given a list of things to output (in an array of OutputType enums
+// of length formatLength), these functions will tell the evolver to 
+// output those things.
 void Evolver::setOutputFormat(OutputType* format, int formatLength) {
     this->format       = format;
-	this->formatLength = formatLength;
+    this->formatLength = formatLength;
 }
 
 void Evolver::outputData(){
@@ -82,10 +112,10 @@ void Evolver::outputData(){
                 outputVolumeForces();
                 break;
             case AREA_FORCES:
-                outputVolumeForces();
+                outputAreaForces();
                 break;
             case NET_FORCES:
-                outputVolumeForces();
+                outputNetForces();
                 break;
             default:
                 break;

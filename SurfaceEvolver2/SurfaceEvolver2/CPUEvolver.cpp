@@ -4,6 +4,10 @@
 
 using namespace std;
 
+
+// Initialize Data for the CPUEvolver, see description of datatypes
+// in CPUEvolver.h for a more detailed description. Otherwise, this
+// code is a necessary evil because of the complicatedness of things
 CPUEvolver::CPUEvolver(Mesh* m, int initItersUntilLambdaUpdate)
     : Evolver(m, initItersUntilLambdaUpdate)
 {
@@ -40,6 +44,7 @@ CPUEvolver::CPUEvolver(Mesh* m, int initItersUntilLambdaUpdate)
     }
 }
 
+// deletes dynamically allocated stuff
 CPUEvolver::~CPUEvolver(){
     delete[] triangleCountPerVertex;
     delete[] triangleOffset;
@@ -48,6 +53,9 @@ CPUEvolver::~CPUEvolver(){
     delete[] volumeForce;
 }
 
+// given a triangle in the form of uint3 tri, return a uint2 made of
+// the vertices not equal to pointIndex that preserves the winding order
+// This is used for populating the trianglesByVertex array
 uint2 CPUEvolver::rearrangeTri(uint3 tri, int pointIndex){
     uint2 simpleTri;
     if(tri.x == pointIndex){
@@ -63,7 +71,7 @@ uint2 CPUEvolver::rearrangeTri(uint3 tri, int pointIndex){
     return simpleTri;
 }
 
-
+// Step simulation runs a single step of surface evolution
 
 void CPUEvolver::stepSimulation(){
     for(int i=0; i < vertexCount; i++){
@@ -81,6 +89,8 @@ void CPUEvolver::stepSimulation(){
     getArea();
 }
 
+// calculates the area and volume force of a particular triangle on
+// a particular vertex
 void CPUEvolver::calculateForces(int vertexIndex, int triangleIndex){
     int triangleIndexOffset = triangleOffset[vertexIndex];
     uint2 tri = trianglesByVertex[triangleIndexOffset + triangleIndex];
@@ -95,7 +105,7 @@ void CPUEvolver::calculateForces(int vertexIndex, int triangleIndex){
     volumeForce[vertexIndex] += cross(x3, x2)/6.0f;
 }
     
-
+// calculates the alpha coefficient
 float CPUEvolver::calculateAlpha(){
     float sum1 = 0, sum2 = 0;
     for(int i = 0; i < vertexCount; i++){
@@ -105,6 +115,9 @@ float CPUEvolver::calculateAlpha(){
     return sum1 / sum2;
 }
 
+// displaces an individual vertex, either overwriting its position
+// data or putting it in the other points buffer depending
+// on the truthiness of mutateMesh
 void CPUEvolver::displaceVertex(int vertexIndex){
     if(mutateMesh)
         points1[vertexIndex] = points1[vertexIndex] + lambda*(areaForce[vertexIndex] - alpha*volumeForce[vertexIndex]);
@@ -112,6 +125,7 @@ void CPUEvolver::displaceVertex(int vertexIndex){
         points2[vertexIndex] = points1[vertexIndex] + lambda*(areaForce[vertexIndex] - alpha*volumeForce[vertexIndex]);
 }    
 
+// returns the total surface area of the mesh
 float CPUEvolver::getArea(){
     float3* outPoints = (mutateMesh) ? points1 : points2;
 
@@ -125,6 +139,7 @@ float CPUEvolver::getArea(){
     return surfaceArea;
 }
 
+// returns the mean net force of the mesh
 float CPUEvolver::getMeanNetForce(){
     float total = 0;
     for(int i=0; i < vertexCount; i++){
@@ -152,6 +167,8 @@ float CPUEvolver::getMeanCurvature(){
     }
     return totalCurvature / vertexCount;
 }
+
+// returns the volume of the mesh
 float CPUEvolver::getVolume(){
     float3* outPoints = (mutateMesh) ? points1 : points2;
 
@@ -163,6 +180,7 @@ float CPUEvolver::getVolume(){
     return v;
 };
 
+// Some quite straightforward output functions
 void CPUEvolver::outputPoints(){
     float3* outPoints = (mutateMesh) ? points1 : points2;
     

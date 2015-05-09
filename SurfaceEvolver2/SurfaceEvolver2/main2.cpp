@@ -15,8 +15,8 @@ enum MeshType { TETRAHEDRON, ICOSAHEDRON,
 
 
 // Returns true if arg begins with match
+// it doesn't look great but it does its job quickly
 bool argMatch(const char* arg, const char* match){
-    //Wheee clean code! 
     for(;(*match)!='\0';match++)
         if((*match) != (*(arg++)))
             return false;
@@ -33,12 +33,12 @@ char lastChar(const char* s){
 
 int main(int argc, char** argv){
     
-	int width = 800;
-	int height = 600;
-	bool fullscreen = false;
+    int width = 800;
+    int height = 600;
+    bool fullscreen = false;
 
-	// Device must be the very first thing created!
-	Device device(width, height, fullscreen);
+    // Device must be the very first thing created!
+    Device device(width, height, fullscreen);
 
     //Default parameters
     
